@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="Projet arrosage" company="1STI2D" webLink="http://" view-date="2025-11-26" view-index="0" gantt-divider-location="351" resource-divider-location="300" version="3.3.3316" locale="fr_FR">
+    <description><![CDATA[Projet de création d'un systeme d'arrosage automatique]]></description>
+    <view zooming-state="default:2" id="gantt-chart">
+        <field id="tpd3" name="Nom" width="200" order="0"/>
+        <field id="tpd4" name="Date de début" width="75" order="1"/>
+        <field id="tpd5" name="Date de fin" width="75" order="2"/>
+        <field id="tpd15" name="Notes" width="20" order="3"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Nom" width="210" order="0"/>
+        <field id="1" name="Rôle par défaut" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="1" uid="73983a2ef0394aed8611ce5d7027dcfc" name="Recherche de l'existant" meeting="false" start="2025-11-17" duration="5" complete="100" webLink="https%3A%2F%2Fnathanjammes-lab.github.io%2FProjet_Arosage%2Fcarte%2520mentale%2FMVHtmlExport%2Findex.htm" expand="true">
+            <notes><![CDATA[Objectif :
+
+Recherche de solutions existante et presentation sous forme de carte mentale
+
+Methode :recherche sur internet
+
+
+Conclusion :la meilleur solution pour ce projet est le goute a goute]]></notes>
+            <depend id="3" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="3" uid="f90cc3b8ea48471fb5a5ac7f2cb9a828" name="Analyse du besoin" meeting="false" start="2025-11-24" duration="6" complete="100" webLink="https%3A%2F%2Fgithub.com%2Fnathanjammes-lab%2FProjet_Arosage%2Fblob%2Fmain%2Fanalyse_besoin%2Fanalyse_besoin.jpg%3Fraw%3Dtrue" expand="true">
+            <notes><![CDATA[objectif :analyser le besoin
+
+
+méthode :exercice de diagramme
+
+conclusion de fin de séance :]]></notes>
+            <depend id="4" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="4" uid="a1bb5f34f8be4f49b329b21d9d2b67df" name="Phase de réflexion" meeting="false" start="2025-12-02" duration="8" complete="100" expand="true">
+            <notes><![CDATA[recher de solution
+]]></notes>
+            <depend id="6" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="6" uid="54d81732c2404d4484a14a847a1b5c6e" name="Croquis" meeting="false" start="2025-12-12" duration="3" complete="100" webLink="file%3A%2F%2F%2FC%3A%2FUsers%2Fordi2418893%2FDownloads%2FIMG_20260206_115915.jpg" expand="true">
+            <notes><![CDATA[Création du croquis et reflexion de piece
+]]></notes>
+            <depend id="7" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="7" uid="d7e2c4b2e16e42939ffda0cf2ee157ed" name="création de piece 1" meeting="false" start="2025-12-17" duration="29" complete="100" webLink="https%3A%2F%2Fcad.onshape.com%2Fdocuments%2F1ebdcbd39435717654714584%2Fw%2F061c80a41a81f831c6c7d309%2Fe%2F0c81dac8944d71dc4b8938b5%3FrenderMode%3D0%26uiState%3D69844dcf7efa5709870f5401" expand="true">
+            <notes><![CDATA[création de piece sur solidwork
+et programmage ]]></notes>
+            <depend id="10" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="8" uid="54fceba5fab8461ba76c0eae55faa9d8" name="Programage" meeting="false" start="2026-01-07" duration="6" complete="100" webLink="file%3A%2F%2F%2FC%3A%2FUsers%2Fordi2418893%2FPictures%2FScreenshots%2FCapture%2520d%27%25C3%25A9cran%25202026-02-05%2520091417.png" expand="true">
+            <notes><![CDATA[creation du programe sur vitacience
+ 
+probleme de calibrage du capteur d'humidité
+
+]]></notes>
+            <depend id="10" type="2" difference="0" hardness="Strong"/>
+            <depend id="12" type="2" difference="0" hardness="Strong"/>
+            <depend id="13" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="13" uid="7408d099d7da47dcbf409a89eec777c1" name="teste du programe" meeting="false" start="2026-01-15" duration="9" complete="100" expand="true">
+            <notes><![CDATA[teste du programe avec pompe, relai, capteur humidité 
+
+Problème: pas assez de carte microbit et nous avons du denuder la pompe care les cables etaient cacher et inutilisable
+
+mais on a reusit et le programe marcher]]></notes>
+        </task>
+        <task id="11" uid="423529b1a83b480b93e8ea722eb71542" name="logigrame" meeting="false" start="2026-01-30" duration="3" complete="100" webLink="file%3A%2F%2F%2FC%3A%2FUsers%2Fordi2418893%2FDownloads%2FSyst%25C3%25A8me_d%27arrosage_FINI.drawio.png" expand="true">
+            <notes><![CDATA[logigrame du programe ]]></notes>
+        </task>
+        <task id="12" uid="ec7fddc7ce96498798490b6d33a1bccf" name="création piece 2" meeting="false" start="2026-01-15" duration="8" complete="100" webLink="https%3A%2F%2Fcad.onshape.com%2Fdocuments%2F1d237ad3dc8cacce2a01fc8e%2Fw%2F529bf12c2ad7c537813b41eb%2Fe%2F0f21f78a75b64e775cbfc654%3FrenderMode%3D0%26leftPanel%3Dfalse%26uiState%3D6984566eff47f1cb9f37d8b2" expand="true">
+            <notes><![CDATA[Céation de la 2eme piece:
+
+Toit de notre piece]]></notes>
+        </task>
+        <task id="10" uid="3470138253ab4966919e627ed0459417" name="finalisation projet" meeting="false" start="2026-01-27" duration="7" complete="100" webLink="file%3A%2F%2F%2FC%3A%2FUsers%2Fordi2418893%2FDownloads%2F3057%2520%281%29.mp4" expand="true">
+            <notes><![CDATA[finalisation du projet,
+ 
+assenblage de la 2 eme piece,
+
+et creation du dossier]]></notes>
+        </task>
+    </tasks>
+    <resources>
+        <resource id="0" name="Léo" function="Default:0" contacts="" phone=""/>
+        <resource id="1" name="Nathan" function="Default:1" contacts="" phone=""/>
+    </resources>
+    <allocations>
+        <allocation task-id="4" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="8" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="10" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="4" resource-id="1" function="Default:1" responsible="false" load="100.0"/>
+        <allocation task-id="10" resource-id="1" function="Default:1" responsible="true" load="100.0"/>
+    </allocations>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>
