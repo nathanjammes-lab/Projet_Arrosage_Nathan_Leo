@@ -13,7 +13,6 @@
       --bg1:#041325; --bg2:#072a55; --bg3:#0b4f86;
       --txt: rgba(255,255,255,.95);
       --muted: rgba(255,255,255,.72);
-      --accent:#6fb6ff; --accent2:#66e6b3;
       --shadow: 0 22px 60px rgba(0,0,0,.48);
       --shadow2: 0 14px 34px rgba(0,0,0,.36);
       --r: 20px;
@@ -74,7 +73,7 @@
       line-height:1.05;
       text-shadow: 0 10px 26px rgba(0,0,0,.40);
     }
-    .subTop{margin:6px 0 0; color:var(--muted); font-size:14px;}
+    .subTop{margin:6px 0 0; color:rgba(255,255,255,.72); font-size:14px;}
 
     main{
       flex:1 1 auto;
@@ -89,7 +88,7 @@
       width:min(1200px, 100%);
       height:100%;
       border:1px solid rgba(255,255,255,.22);
-      border-radius: var(--r);
+      border-radius: 20px;
       background: rgba(255,255,255,.14);
       box-shadow: var(--shadow);
       overflow:hidden;
@@ -106,7 +105,7 @@
       background: rgba(0,0,0,.12);
     }
     .card h2{margin:0; font-size:16px;}
-    .muted{color:var(--muted);}
+    .muted{color:rgba(255,255,255,.72);}
     .card .bd{flex:1 1 auto; padding: 12px 14px; overflow:hidden;}
 
     .map{
@@ -118,7 +117,7 @@
       border: 1px solid rgba(255,255,255,.18);
     }
 
-    /* ✅ SVG au-dessus des cartes */
+    /* ✅ SVG AU-DESSUS pour que le trait soit TOUJOURS visible */
     .lines{
       position:absolute; inset:0;
       width:100%; height:100%;
@@ -139,7 +138,7 @@
       z-index:2;
     }
     .node .t{font-weight:1000; margin-bottom:6px;}
-    .node .d{font-size:13px; color:var(--muted); margin-bottom:10px;}
+    .node .d{font-size:13px; color:rgba(255,255,255,.72); margin-bottom:10px;}
     .node .links{display:flex; flex-wrap:wrap; gap:8px;}
 
     .pill{
@@ -153,7 +152,7 @@
       text-decoration:none;
       font-size:13px;
       white-space:nowrap;
-      color: var(--txt);
+      color: rgba(255,255,255,.95);
     }
     .pill:hover{background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.32);}
     .pill.blue{border-color: rgba(111,182,255,.70);}
@@ -171,11 +170,17 @@
     .center .d{font-size:14px;}
 
     .n-recherche{ left:4%;  top:7%; }
-    .n-onshape  { right:4%; top:9%; }
-    .n-besoin   { left:4%;  top:56%; }
-    .n-planning { right:4%; top:56%; }
 
-    .n-medias   { left:50%; top:90%; transform: translate(-50%, -50%); width:390px; }
+    /* ✅ demandé : rapprocher Onshape vers la gauche (= augmenter "right") */
+    .n-onshape  { right:10%; top:9%; }
+
+    .n-besoin   { left:4%;  top:56%; }
+
+    /* ✅ demandé : remonter Planning + décaler vers la droite (= diminuer "right") */
+    .n-planning { right:1%; top:50%; }
+
+    /* ✅ demandé : décaler Médias vers la droite (augmenter left) */
+    .n-medias   { left:58%; top:90%; transform: translate(-50%, -50%); width:390px; }
 
     .fab{
       position: fixed;
@@ -195,12 +200,13 @@
       background: rgba(0,0,0,.32);
       backdrop-filter: blur(10px);
       text-decoration:none;
-      color: var(--txt);
+      color: rgba(255,255,255,.95);
       box-shadow: 0 12px 28px rgba(0,0,0,.30);
       font-weight: 700;
       font-size: 13px;
     }
     .fab .zip{border-color: rgba(111,182,255,.60);}
+    .fab .repo= {border-color: rgba(102,230,179,.60);}
     .fab .repo{border-color: rgba(102,230,179,.60);}
   </style>
 </head>
@@ -224,7 +230,7 @@
 
             <svg class="lines" id="lines" aria-hidden="true" preserveAspectRatio="none">
               <defs>
-                <!-- ✅ IMPORTANT : gradient en userSpaceOnUse (sinon branche verticale = bbox width≈0 => invisible) -->
+                <!-- ✅ IMPORTANT : gradient en userSpaceOnUse (sinon branche quasi verticale peut “disparaître”) -->
                 <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1000" y2="600">
                   <stop offset="0" stop-color="#6fb6ff" stop-opacity=".98"/>
                   <stop offset="1" stop-color="#66e6b3" stop-opacity=".90"/>
@@ -238,6 +244,8 @@
                   </feMerge>
                 </filter>
 
+                <!-- masque (on l’utilise pour les autres branches),
+                     MAIS la branche "medias" sera volontairement NON masquée pour être visible coûte que coûte -->
                 <mask id="cutNodes" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse">
                   <rect id="cut-bg" x="0" y="0" width="1" height="1" fill="white"></rect>
                 </mask>
@@ -321,9 +329,10 @@
   </div>
 
   <script>
+    // ✅ réglages pour QUE la branche Médias apparaisse
     const PAD = 10;       // branches normales
-    const CUT_PAD = 6;    // trou du masque (petit)
-    const SAFE_GAP = 28;  // éloigne la branche Médias des cartes
+    const CUT_PAD = 6;    // trous de masque
+    const SAFE_GAP = 34;  // ✅ encore plus loin des cartes = jamais caché
 
     const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -391,7 +400,7 @@
         const c2 = { x: b.x - s*bend, y: b.y };
         return `M ${a.x} ${a.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${b.x} ${b.y}`;
       } else {
-        const bend = Math.min(210, Math.abs(dy) * 0.40);
+        const bend = Math.min(260, Math.abs(dy) * 0.40);
         const s = Math.sign(dy) || 1;
         const c1 = { x: a.x, y: a.y + s*bend };
         const c2 = { x: b.x, y: b.y - s*bend };
@@ -404,28 +413,19 @@
       const mask = svg.querySelector("#cutNodes");
       const bg = mask.querySelector("#cut-bg");
 
-      // ✅ IMPORTANT : définir explicitement la zone du masque (évite les “coupes” bizarres)
-      mask.setAttribute("x", "0");
-      mask.setAttribute("y", "0");
+      mask.setAttribute("x","0");
+      mask.setAttribute("y","0");
       mask.setAttribute("width", String(rootRect.width));
       mask.setAttribute("height", String(rootRect.height));
 
-      bg.setAttribute("x", "0");
-      bg.setAttribute("y", "0");
+      bg.setAttribute("x","0");
+      bg.setAttribute("y","0");
       bg.setAttribute("width", String(rootRect.width));
       bg.setAttribute("height", String(rootRect.height));
 
       mask.querySelectorAll("rect[data-cut]").forEach(r => r.remove());
 
-      const nodeIds = [
-        "node-center",
-        "node-recherche",
-        "node-besoin",
-        "node-onshape",
-        "node-planning",
-        "node-medias"
-      ];
-
+      const nodeIds = ["node-center","node-recherche","node-besoin","node-onshape","node-planning","node-medias"];
       for(const id of nodeIds){
         const rr = rectRel(must(id), rootRect);
         const cut = document.createElementNS(SVG_NS, "rect");
@@ -450,15 +450,21 @@
         svg.appendChild(p);
       }
 
-      // ✅ (re)applique les attributs à chaque fois (fiable)
+      // ✅ réapplique à chaque layout (fiable)
       p.setAttribute("stroke", "url(#g)");
-      p.setAttribute("stroke-width", id === "medias" ? "6.2" : "4.8");
+      p.setAttribute("stroke-width", id === "medias" ? "6.6" : "4.8");
       p.setAttribute("fill", "none");
       p.setAttribute("filter", "url(#glow)");
       p.setAttribute("stroke-linecap", "round");
       p.setAttribute("stroke-opacity", "1");
-      p.setAttribute("mask", "url(#cutNodes)");
       p.setAttribute("vector-effect", "non-scaling-stroke");
+
+      // ✅ IMPORTANT : la branche médias = NON masquée (donc elle apparaît coûte que coûte)
+      if (id === "medias") {
+        p.removeAttribute("mask");
+      } else {
+        p.setAttribute("mask", "url(#cutNodes)");
+      }
 
       let c = document.getElementById(`c-${id}`);
       if(!c){
@@ -466,12 +472,10 @@
         c.setAttribute("id", `c-${id}`);
         svg.appendChild(c);
       }
-
-      c.setAttribute("r", "4.6");
+      c.setAttribute("r", "4.8");
       c.setAttribute("fill", "#ffffff");
       c.setAttribute("opacity", ".92");
       c.setAttribute("filter", "url(#glow)");
-      // ✅ pas de mask sur le point (sinon il peut être coupé)
       return {p,c};
     }
 
@@ -484,10 +488,9 @@
       svg.setAttribute('width', root.width);
       svg.setAttribute('height', root.height);
 
-      // ✅ met à jour le gradient (userSpaceOnUse) pour la taille actuelle
+      // ✅ MAJEUR : gradient userSpaceOnUse calé sur la taille -> plus jamais de trait invisible
       const grad = document.getElementById("g");
-      grad.setAttribute("x1","0");
-      grad.setAttribute("y1","0");
+      grad.setAttribute("x1","0"); grad.setAttribute("y1","0");
       grad.setAttribute("x2", String(root.width));
       grad.setAttribute("y2", String(root.height));
 
@@ -508,6 +511,7 @@
 
         let start, end;
 
+        // ✅ Médias : départ/arrivée plus loin des cartes + pas de masque => visible forcément
         if (t.id === 'medias') {
           start = { x: cRect.cx, y: cRect.bottom + SAFE_GAP };
           end   = { x: tRect.cx, y: tRect.top - SAFE_GAP };
