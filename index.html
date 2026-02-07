@@ -7,16 +7,10 @@
 
   <style>
     :root{
-      --bg1:#041325;
-      --bg2:#072a55;
-      --bg3:#0b4f86;
-
+      --bg1:#041325; --bg2:#072a55; --bg3:#0b4f86;
       --txt: rgba(255,255,255,.95);
       --muted: rgba(255,255,255,.72);
-
-      --accent:#6fb6ff;
-      --accent2:#66e6b3;
-
+      --accent:#6fb6ff; --accent2:#66e6b3;
       --shadow: 0 22px 60px rgba(0,0,0,.48);
       --shadow2: 0 14px 34px rgba(0,0,0,.36);
       --r: 20px;
@@ -25,14 +19,12 @@
     *{box-sizing:border-box;}
     html,body{height:100%;}
 
-    /* ✅ Pas de scroll */
     body{
       margin:0;
       height:100vh;
       overflow:hidden;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--txt);
-
       background:
         radial-gradient(1100px 650px at 15% 10%, rgba(111,182,255,.33), transparent 55%),
         radial-gradient(900px 600px at 85% 0%, rgba(102,230,179,.18), transparent 55%),
@@ -40,7 +32,6 @@
         linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
     }
 
-    /* ✅ Petites gouttes en fond */
     body::before{
       content:"";
       position:fixed; inset:0;
@@ -51,7 +42,6 @@
       filter: blur(.22px);
     }
 
-    /* ✅ Tuyaux + goutteurs + petites gouttes */
     body::after{
       content:"";
       position:fixed; inset:-30px;
@@ -63,11 +53,7 @@
       filter: blur(.35px);
     }
 
-    .page{
-      height:100vh;
-      display:flex;
-      flex-direction:column;
-    }
+    .page{height:100vh; display:flex; flex-direction:column;}
 
     header{
       flex:0 0 auto;
@@ -85,11 +71,7 @@
       line-height:1.05;
       text-shadow: 0 10px 26px rgba(0,0,0,.40);
     }
-    .subTop{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
+    .subTop{margin:6px 0 0; color:var(--muted); font-size:14px;}
 
     main{
       flex:1 1 auto;
@@ -100,7 +82,6 @@
       align-items:stretch;
     }
 
-    /* ✅ Contraste renforcé */
     .card{
       width:min(1200px, 100%);
       height:100%;
@@ -114,54 +95,45 @@
       backdrop-filter: blur(10px);
     }
     .card .hd{
-      flex:0 0 auto;
       padding:12px 14px;
       border-bottom:1px solid rgba(255,255,255,.16);
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:10px;
       background: rgba(0,0,0,.12);
     }
     .card h2{margin:0; font-size:16px;}
-    .muted{color:var(--muted);}
 
-    .card .bd{
-      flex:1 1 auto;
-      padding: 12px 14px;
-      overflow:hidden;
-    }
+    .card .bd{flex:1 1 auto; padding: 12px 14px; overflow:hidden;}
 
     .map{
       position:relative;
       height:100%;
       border-radius: 18px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
       overflow:hidden;
       border: 1px solid rgba(255,255,255,.18);
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.10);
     }
 
-    /* Lignes dynamiques */
+    /* ✅ SVG en dessous des nodes, mais visible */
     .lines{
       position:absolute; inset:0;
       width:100%; height:100%;
       pointer-events:none;
-      opacity:.95;
+      opacity:.97;
       z-index:1;
     }
+    .node{z-index:2;}
 
     .node{
       position:absolute;
-      width: 255px;
-      padding: 12px 12px;
-      border-radius: 20px;
+      width:255px;
+      padding:12px;
+      border-radius:20px;
       border:1px solid rgba(255,255,255,.26);
-      background: rgba(0,0,0,.30);  /* ✅ plus contrasté */
+      background: rgba(0,0,0,.30);
       box-shadow: var(--shadow2);
       backdrop-filter: blur(8px);
-      z-index:2;
     }
     .node .t{font-weight:1000; margin-bottom:6px;}
     .node .d{font-size:13px; color:var(--muted); margin-bottom:10px;}
@@ -172,11 +144,11 @@
       align-items:center;
       justify-content:center;
       padding:8px 10px;
-      border-radius: 999px;
+      border-radius:999px;
       border:1px solid rgba(255,255,255,.24);
       background: rgba(255,255,255,.08);
       text-decoration:none;
-      font-size: 13px;
+      font-size:13px;
       white-space:nowrap;
       color: var(--txt);
     }
@@ -185,24 +157,22 @@
     .pill.green{border-color: rgba(102,230,179,.65);}
 
     .center{
-      left: 50%; top: 50%;
+      left:50%; top:50%;
       transform: translate(-50%, -50%);
-      width: 390px;
-      padding: 16px 16px;
+      width:390px;
+      padding:16px;
       background: linear-gradient(180deg, rgba(111,182,255,.28), rgba(0,0,0,.30));
       border-color: rgba(111,182,255,.55);
     }
-    .center .t{font-size: 20px;}
-    .center .d{font-size: 14px;}
+    .center .t{font-size:20px;}
+    .center .d{font-size:14px;}
 
-    /* Positions desktop */
-    .n-recherche{ left: 4%;  top: 10%; }
-    .n-onshape { right: 4%; top: 14%; }
-    .n-planning{ right: 4%; top: 62%; }
-    .n-besoin  { left: 4%;  top: 62%; }
-    .n-medias  { left: 50%; top: 90%; transform: translate(-50%, -50%); width: 390px; }
+    .n-recherche{ left:4%; top:10%; }
+    .n-onshape { right:4%; top:14%; }
+    .n-planning{ right:4%; top:62%; }
+    .n-besoin  { left:4%; top:62%; }
+    .n-medias  { left:50%; top:90%; transform: translate(-50%, -50%); width:390px; }
 
-    /* Boutons bas-droite */
     .fab{
       position: fixed;
       right: 16px;
@@ -226,7 +196,6 @@
       font-weight: 700;
       font-size: 13px;
     }
-    .fab a:hover{background: rgba(0,0,0,.40); border-color: rgba(255,255,255,.30);}
     .fab .zip{border-color: rgba(111,182,255,.60);}
     .fab .repo{border-color: rgba(102,230,179,.60);}
   </style>
@@ -248,7 +217,7 @@
 
         <div class="bd">
           <div class="map" id="map">
-            <!-- ✅ Lignes dynamiques (5 branches) -->
+
             <svg class="lines" id="lines" aria-hidden="true">
               <defs>
                 <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
@@ -264,21 +233,21 @@
                 </filter>
               </defs>
 
-              <path id="p-recherche" stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
-              <path id="p-besoin"   stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
-              <path id="p-onshape"  stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
-              <path id="p-planning" stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
-              <path id="p-medias"   stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)" opacity=".90"/>
+              <!-- ✅ 5 paths -->
+              <path id="p-recherche" stroke="url(#g)" stroke-width="4.8" fill="none" filter="url(#glow)"/>
+              <path id="p-besoin"   stroke="url(#g)" stroke-width="4.8" fill="none" filter="url(#glow)"/>
+              <path id="p-onshape"  stroke="url(#g)" stroke-width="4.8" fill="none" filter="url(#glow)"/>
+              <path id="p-planning" stroke="url(#g)" stroke-width="4.8" fill="none" filter="url(#glow)"/>
+              <path id="p-medias"   stroke="url(#g)" stroke-width="4.8" fill="none" filter="url(#glow)"/>
 
-              <circle id="c-center" r="4.4" fill="rgba(255,255,255,.85)" opacity=".55"/>
-              <circle id="c-recherche" r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
-              <circle id="c-besoin"   r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
-              <circle id="c-onshape"  r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
-              <circle id="c-planning" r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
-              <circle id="c-medias"   r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
+              <circle id="c-center" r="4.6" fill="rgba(255,255,255,.85)" opacity=".55"/>
+              <circle id="c-recherche" r="4.0" fill="rgba(255,255,255,.85)" opacity=".52"/>
+              <circle id="c-besoin"   r="4.0" fill="rgba(255,255,255,.85)" opacity=".52"/>
+              <circle id="c-onshape"  r="4.0" fill="rgba(255,255,255,.85)" opacity=".52"/>
+              <circle id="c-planning" r="4.0" fill="rgba(255,255,255,.85)" opacity=".52"/>
+              <circle id="c-medias"   r="4.0" fill="rgba(255,255,255,.85)" opacity=".52"/>
             </svg>
 
-            <!-- CENTRE -->
             <div class="node center" id="node-center">
               <div class="t">Projet Arrosage</div>
               <div class="d">De l’existant → besoin → conception → planning → réalisation.</div>
@@ -288,7 +257,6 @@
               </div>
             </div>
 
-            <!-- Recherche -->
             <div class="node n-recherche" id="node-recherche">
               <div class="t">🔎 Recherche de l’existant</div>
               <div class="d">Carte mentale / état des lieux.</div>
@@ -300,7 +268,6 @@
               </div>
             </div>
 
-            <!-- Besoin -->
             <div class="node n-besoin" id="node-besoin">
               <div class="t">🧾 Besoin / analyse</div>
               <div class="d">Cahier des charges, contraintes.</div>
@@ -312,7 +279,6 @@
               </div>
             </div>
 
-            <!-- Onshape -->
             <div class="node n-onshape" id="node-onshape">
               <div class="t">🧩 Conception Onshape</div>
               <div class="d">Pièces modélisées (liens directs).</div>
@@ -328,7 +294,6 @@
               </div>
             </div>
 
-            <!-- Planning -->
             <div class="node n-planning" id="node-planning">
               <div class="t">📅 Planning</div>
               <div class="d">GanttProject (.gan) + suivi.</div>
@@ -341,7 +306,6 @@
               </div>
             </div>
 
-            <!-- Médias -->
             <div class="node n-medias" id="node-medias">
               <div class="t">📷 Médias</div>
               <div class="d">Croquis, programme, schéma, vidéo.</div>
@@ -358,7 +322,6 @@
       </section>
     </main>
 
-    <!-- Boutons bas-droite -->
     <div class="fab">
       <a class="repo" href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo" target="_blank" rel="noopener">↗ Dépôt GitHub</a>
       <a class="zip"  href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/archive/refs/heads/main.zip" target="_blank" rel="noopener">⬇ ZIP</a>
@@ -366,6 +329,12 @@
   </div>
 
   <script>
+    function must(id){
+      const el = document.getElementById(id);
+      if(!el) console.error("Élément manquant:", id);
+      return el;
+    }
+
     function centerOf(el, rootRect){
       const r = el.getBoundingClientRect();
       return { x: (r.left - rootRect.left) + r.width/2, y: (r.top - rootRect.top) + r.height/2 };
@@ -375,15 +344,14 @@
       const dx = b.x - a.x;
       const dy = b.y - a.y;
 
-      // courbure intelligente : plutôt horizontale ou verticale
       if (Math.abs(dx) >= Math.abs(dy)){
-        const bend = Math.min(260, Math.abs(dx) * 0.55);
+        const bend = Math.min(280, Math.abs(dx) * 0.55);
         const s = Math.sign(dx) || 1;
         const c1 = { x: a.x + s*bend, y: a.y };
         const c2 = { x: b.x - s*bend, y: b.y };
         return `M ${a.x} ${a.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${b.x} ${b.y}`;
       } else {
-        const bend = Math.min(240, Math.abs(dy) * 0.55);
+        const bend = Math.min(260, Math.abs(dy) * 0.55);
         const s = Math.sign(dy) || 1;
         const c1 = { x: a.x, y: a.y + s*bend };
         const c2 = { x: b.x, y: b.y - s*bend };
@@ -392,46 +360,43 @@
     }
 
     function layoutLines(){
-      const map = document.getElementById('map');
-      const svg = document.getElementById('lines');
+      const map = must('map');
+      const svg = must('lines');
       const rect = map.getBoundingClientRect();
 
-      // viewBox = dimensions réelles => coordonnées simples
       svg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
       svg.setAttribute('width', rect.width);
       svg.setAttribute('height', rect.height);
 
-      const centerNode = document.getElementById('node-center');
+      const centerNode = must('node-center');
       const targets = [
-        { id:'recherche', el: document.getElementById('node-recherche') },
-        { id:'besoin',   el: document.getElementById('node-besoin') },
-        { id:'onshape',  el: document.getElementById('node-onshape') },
-        { id:'planning', el: document.getElementById('node-planning') },
-        { id:'medias',   el: document.getElementById('node-medias') },
+        { id:'recherche', node: must('node-recherche') },
+        { id:'besoin',   node: must('node-besoin') },
+        { id:'onshape',  node: must('node-onshape') },
+        { id:'planning', node: must('node-planning') },
+        { id:'medias',   node: must('node-medias') },
       ];
 
       const c = centerOf(centerNode, rect);
+      must('c-center').setAttribute('cx', c.x);
+      must('c-center').setAttribute('cy', c.y);
 
-      // point central
-      const cDot = document.getElementById('c-center');
-      cDot.setAttribute('cx', c.x); cDot.setAttribute('cy', c.y);
-
-      for (const t of targets){
-        const p = centerOf(t.el, rect);
-
-        // trace
-        const path = document.getElementById(`p-${t.id}`);
-        path.setAttribute('d', bezierPath(c, p));
-
-        // points
-        const dot = document.getElementById(`c-${t.id}`);
-        dot.setAttribute('cx', p.x);
-        dot.setAttribute('cy', p.y);
+      for(const t of targets){
+        const p = centerOf(t.node, rect);
+        must(`p-${t.id}`).setAttribute('d', bezierPath(c, p));
+        must(`c-${t.id}`).setAttribute('cx', p.x);
+        must(`c-${t.id}`).setAttribute('cy', p.y);
       }
     }
 
-    window.addEventListener('load', layoutLines);
-    window.addEventListener('resize', layoutLines);
+    window.addEventListener('load', () => {
+      layoutLines();
+      setTimeout(layoutLines, 200);  // ✅ deuxième passage "sécurité"
+    });
+    window.addEventListener('resize', () => {
+      layoutLines();
+      setTimeout(layoutLines, 120);
+    });
   </script>
 </body>
 </html>
