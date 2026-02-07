@@ -84,7 +84,6 @@
       align-items:stretch;
     }
 
-    /* + contraste */
     .card{
       width:min(1200px, 100%);
       height:100%;
@@ -118,7 +117,6 @@
       border: 1px solid rgba(255,255,255,.18);
     }
 
-    /* traits sous les cartes */
     .lines{
       position:absolute; inset:0;
       width:100%; height:100%;
@@ -236,14 +234,12 @@
                 </filter>
               </defs>
 
-              <!-- 5 paths -->
               <path id="p-recherche" stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
               <path id="p-besoin"   stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
               <path id="p-onshape"  stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
               <path id="p-planning" stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
               <path id="p-medias"   stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
 
-              <!-- points -->
               <circle id="c-recherche" r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
               <circle id="c-besoin"   r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
               <circle id="c-onshape"  r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
@@ -251,13 +247,10 @@
               <circle id="c-medias"   r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
             </svg>
 
+            <!-- ✅ Carte centrale : boutons supprimés -->
             <div class="node center" id="node-center">
               <div class="t">Projet Arrosage</div>
               <div class="d">De l’existant → besoin → conception → planning → réalisation.</div>
-              <div class="links">
-                <a class="pill blue" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">📅 Planning</a>
-                <a class="pill green" href="autres_fichiers/video.mp4">▶️ Vidéo</a>
-              </div>
             </div>
 
             <div class="node n-recherche" id="node-recherche">
@@ -332,7 +325,7 @@
   </div>
 
   <script>
-    const PAD = 10; // distance pour que les traits s'arrêtent AVANT les cartes
+    const PAD = 10;
 
     function must(id){
       const el = document.getElementById(id);
@@ -354,33 +347,25 @@
       };
     }
 
-    // point d'intersection du rayon (depuis centre du rect) vers (tx,ty) avec le bord du rect
     function edgePoint(rect, tx, ty){
       const cx = rect.cx, cy = rect.cy;
       const dx = tx - cx, dy = ty - cy;
-
-      // évite divisions par 0
       const EPS = 1e-6;
-
       const candidates = [];
 
-      // côtés verticaux x=left / x=right
       if (Math.abs(dx) > EPS){
         let t = (rect.left - cx) / dx;
         let y = cy + t*dy;
         if (t > 0 && y >= rect.top && y <= rect.bottom) candidates.push({t, x: rect.left, y});
-
         t = (rect.right - cx) / dx;
         y = cy + t*dy;
         if (t > 0 && y >= rect.top && y <= rect.bottom) candidates.push({t, x: rect.right, y});
       }
 
-      // côtés horizontaux y=top / y=bottom
       if (Math.abs(dy) > EPS){
         let t = (rect.top - cy) / dy;
         let x = cx + t*dx;
         if (t > 0 && x >= rect.left && x <= rect.right) candidates.push({t, x, y: rect.top});
-
         t = (rect.bottom - cy) / dy;
         x = cx + t*dx;
         if (t > 0 && x >= rect.left && x <= rect.right) candidates.push({t, x, y: rect.bottom});
@@ -389,18 +374,16 @@
       candidates.sort((a,b)=>a.t-b.t);
       const hit = candidates[0] || {x: cx, y: cy};
 
-      // normalise direction (du centre vers la cible)
       const len = Math.hypot(dx, dy) || 1;
       const ux = dx/len, uy = dy/len;
 
-      return { x: hit.x + ux*PAD, y: hit.y + uy*PAD, ux, uy };
+      return { x: hit.x + ux*PAD, y: hit.y + uy*PAD };
     }
 
     function bezierPath(a, b){
       const dx = b.x - a.x;
       const dy = b.y - a.y;
 
-      // courbure plus douce (évite de "rentrer" visuellement sur les cartes)
       if (Math.abs(dx) >= Math.abs(dy)){
         const bend = Math.min(220, Math.abs(dx) * 0.40);
         const s = Math.sign(dx) || 1;
@@ -433,20 +416,25 @@
         { id:'besoin',   node: must('node-besoin') },
         { id:'onshape',  node: must('node-onshape') },
         { id:'planning', node: must('node-planning') },
-        { id:'medias',   node: must('node-medias') }, // ✅ medias inclus
+        { id:'medias',   node: must('node-medias') },
       ];
 
       for(const t of targets){
         const tRect = rectRel(t.node, root);
 
-        // points sur les BORDS (pas au centre)
-        const start = edgePoint(cRect, tRect.cx, tRect.cy);         // sort du centre
-        const end   = edgePoint(tRect, cRect.cx, cRect.cy);         // sort de la cible vers le centre
+        let start, end;
 
-        // trace
+        // ✅ FIX SPÉCIAL MÉDIAS : ancrage bas-centre -> haut-centre (visible à coup sûr)
+        if (t.id === 'medias') {
+          start = { x: cRect.cx, y: cRect.bottom + PAD };
+          end   = { x: tRect.cx, y: tRect.top - PAD };
+        } else {
+          start = edgePoint(cRect, tRect.cx, tRect.cy);
+          end   = edgePoint(tRect, cRect.cx, cRect.cy);
+        }
+
         must(`p-${t.id}`).setAttribute('d', bezierPath(start, end));
 
-        // point côté cible
         const dot = must(`c-${t.id}`);
         dot.setAttribute('cx', end.x);
         dot.setAttribute('cy', end.y);
@@ -455,7 +443,7 @@
 
     window.addEventListener('load', () => {
       layoutLines();
-      setTimeout(layoutLines, 200); // stabilité rendu
+      setTimeout(layoutLines, 200);
     });
     window.addEventListener('resize', () => {
       layoutLines();
