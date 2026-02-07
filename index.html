@@ -7,7 +7,7 @@
 
   <!-- ✅ évite le 404 favicon.ico -->
   <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs/%3E%3Crect width='64' height='64' rx='14' fill='%23072a55'/%3E%3Cpath d='M32 10s14 16 14 28a14 14 0 1 1-28 0c0-12 14-28 14-28z' fill='%236fb6ff'/%3E%3Ccircle cx='24' cy='42' r='3' fill='white' fill-opacity='.8'/%3E%3C/svg%3E" />
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23072a55'/%3E%3Cpath d='M32 10s14 16 14 28a14 14 0 1 1-28 0c0-12 14-28 14-28z' fill='%236fb6ff'/%3E%3Ccircle cx='24' cy='42' r='3' fill='white' fill-opacity='.8'/%3E%3C/svg%3E" />
 
   <style>
     :root{
@@ -19,6 +19,7 @@
       --shadow2: 0 14px 34px rgba(0,0,0,.36);
       --r: 20px;
     }
+
     *{box-sizing:border-box;}
     html,body{height:100%;}
 
@@ -59,6 +60,7 @@
     }
 
     .page{height:100vh; display:flex; flex-direction:column;}
+
     header{
       flex:0 0 auto;
       backdrop-filter: blur(10px);
@@ -90,7 +92,7 @@
       width:min(1200px, 100%);
       height:100%;
       border:1px solid rgba(255,255,255,.22);
-      border-radius: 20px;
+      border-radius: var(--r);
       background: rgba(255,255,255,.14);
       box-shadow: var(--shadow);
       overflow:hidden;
@@ -170,11 +172,14 @@
     .center .t{font-size:20px;}
     .center .d{font-size:14px;}
 
-    .n-recherche{ left:4%; top:10%; }
-    .n-onshape { right:4%; top:14%; }
-    .n-planning{ right:4%; top:62%; }
-    .n-besoin  { left:4%; top:62%; }
-    .n-medias  { left:50%; top:90%; transform: translate(-50%, -50%); width:390px; }
+    /* ✅ remonte un peu les 4 cartes */
+    .n-recherche{ left:4%;  top:7%; }
+    .n-onshape  { right:4%; top:9%; }
+    .n-besoin   { left:4%;  top:56%; }
+    .n-planning { right:4%; top:56%; }
+
+    /* Médias au centre bas */
+    .n-medias   { left:50%; top:90%; transform: translate(-50%, -50%); width:390px; }
 
     .fab{
       position: fixed;
@@ -235,11 +240,10 @@
                   </feMerge>
                 </filter>
               </defs>
-
-              <!-- on laisse le SVG vide: le JS créera/assurera tous les paths/circles -->
+              <!-- ✅ le JS crée automatiquement tous les traits/points -->
             </svg>
 
-            <!-- carte centrale : pas de boutons -->
+            <!-- ✅ carte centrale : sans boutons -->
             <div class="node center" id="node-center">
               <div class="t">Projet Arrosage</div>
               <div class="d">De l’existant → besoin → conception → planning → réalisation.</div>
@@ -391,7 +395,7 @@
       }
     }
 
-    // ✅ crée path/circle si manquants (donc Médias ne peut plus "disparaître")
+    // ✅ crée path/circle si manquants (donc le trait "Médias" ne peut plus disparaître)
     function ensureSvgFor(id){
       const svg = must("lines");
 
@@ -400,7 +404,7 @@
         p = document.createElementNS("http://www.w3.org/2000/svg","path");
         p.setAttribute("id", `p-${id}`);
         p.setAttribute("stroke", "url(#g)");
-        p.setAttribute("stroke-width", id === "medias" ? "5.6" : "4.6"); // Médias un poil + visible
+        p.setAttribute("stroke-width", id === "medias" ? "5.6" : "4.6");
         p.setAttribute("fill", "none");
         p.setAttribute("filter", "url(#glow)");
         p.setAttribute("stroke-linecap", "round");
@@ -435,15 +439,16 @@
         { id:'besoin',   node: must('node-besoin') },
         { id:'onshape',  node: must('node-onshape') },
         { id:'planning', node: must('node-planning') },
-        { id:'medias',   node: must('node-medias') }, // ✅ bien "medias"
+        { id:'medias',   node: must('node-medias') },
       ];
 
       for(const t of targets){
         const tRect = rectRel(t.node, root);
 
         let start, end;
+
+        // ✅ branche Médias : bas-centre -> haut-centre (garantie visible)
         if (t.id === 'medias') {
-          // ✅ forçage : bas-centre de la carte centrale -> haut-centre de la carte Médias
           start = { x: cRect.cx, y: cRect.bottom + PAD };
           end   = { x: tRect.cx, y: tRect.top - PAD };
         } else {
@@ -458,12 +463,12 @@
       }
     }
 
+    // ✅ plusieurs frames: évite le "calcul trop tôt" (fonts / layout)
     function stabilize(){
-      // ✅ plusieurs frames: évite le cas "calcul trop tôt"
       let n = 0;
       const tick = () => {
         try { layoutLines(); } catch(e){ console.error(e); }
-        if(n++ < 20) requestAnimationFrame(tick);
+        if(n++ < 18) requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);
       setTimeout(()=>{ try{layoutLines();}catch(e){console.error(e);} }, 200);
