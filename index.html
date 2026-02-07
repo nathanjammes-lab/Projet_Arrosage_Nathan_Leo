@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Projet Arrosage — Nathan & Léo</title>
 
-  <!-- ✅ évite le 404 favicon.ico -->
   <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23072a55'/%3E%3Cpath d='M32 10s14 16 14 28a14 14 0 1 1-28 0c0-12 14-28 14-28z' fill='%236fb6ff'/%3E%3Ccircle cx='24' cy='42' r='3' fill='white' fill-opacity='.8'/%3E%3C/svg%3E" />
 
@@ -36,7 +35,6 @@
         linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
     }
 
-    /* petites gouttes */
     body::before{
       content:"";
       position:fixed; inset:0;
@@ -47,7 +45,6 @@
       filter: blur(.22px);
     }
 
-    /* tuyaux + goutteurs + gouttes */
     body::after{
       content:"";
       position:fixed; inset:-30px;
@@ -121,7 +118,7 @@
       border: 1px solid rgba(255,255,255,.18);
     }
 
-    /* ✅ IMPORTANT : le SVG au-dessus des cartes (sinon la grosse ombre du centre “mange” la branche Médias) */
+    /* ✅ SVG au-dessus des cartes */
     .lines{
       position:absolute; inset:0;
       width:100%; height:100%;
@@ -227,7 +224,8 @@
 
             <svg class="lines" id="lines" aria-hidden="true" preserveAspectRatio="none">
               <defs>
-                <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                <!-- ✅ IMPORTANT : gradient en userSpaceOnUse (sinon branche verticale = bbox width≈0 => invisible) -->
+                <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1000" y2="600">
                   <stop offset="0" stop-color="#6fb6ff" stop-opacity=".98"/>
                   <stop offset="1" stop-color="#66e6b3" stop-opacity=".90"/>
                 </linearGradient>
@@ -240,8 +238,7 @@
                   </feMerge>
                 </filter>
 
-                <!-- ✅ Masque: on affiche tout en blanc, puis on “découpe” des trous noirs sous les cartes -->
-                <mask id="cutNodes" maskUnits="userSpaceOnUse">
+                <mask id="cutNodes" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse">
                   <rect id="cut-bg" x="0" y="0" width="1" height="1" fill="white"></rect>
                 </mask>
               </defs>
@@ -324,10 +321,11 @@
   </div>
 
   <script>
-    // ✅ réglages “anti-coupe” : le trait démarre/arrive plus loin que le masque
     const PAD = 10;       // branches normales
-    const CUT_PAD = 6;    // ✅ trou du masque plus petit (évite de manger le trait)
-    const SAFE_GAP = 28;  // ✅ éloigne le trait des cartes (épaisseur + glow)
+    const CUT_PAD = 6;    // trou du masque (petit)
+    const SAFE_GAP = 28;  // éloigne la branche Médias des cartes
+
+    const SVG_NS = "http://www.w3.org/2000/svg";
 
     function must(id){
       const el = document.getElementById(id);
@@ -401,20 +399,22 @@
       }
     }
 
-    const SVG_NS = "http://www.w3.org/2000/svg";
-
-    // ✅ masque: on “troue” sous les cartes pour éviter que les traits passent dessus
     function ensureCutMask(rootRect){
       const svg = must("lines");
       const mask = svg.querySelector("#cutNodes");
-
       const bg = mask.querySelector("#cut-bg");
+
+      // ✅ IMPORTANT : définir explicitement la zone du masque (évite les “coupes” bizarres)
+      mask.setAttribute("x", "0");
+      mask.setAttribute("y", "0");
+      mask.setAttribute("width", String(rootRect.width));
+      mask.setAttribute("height", String(rootRect.height));
+
       bg.setAttribute("x", "0");
       bg.setAttribute("y", "0");
       bg.setAttribute("width", String(rootRect.width));
       bg.setAttribute("height", String(rootRect.height));
 
-      // supprime les anciens “trous”
       mask.querySelectorAll("rect[data-cut]").forEach(r => r.remove());
 
       const nodeIds = [
@@ -435,12 +435,11 @@
         cut.setAttribute("width", String(rr.width + 2*CUT_PAD));
         cut.setAttribute("height", String(rr.height + 2*CUT_PAD));
         cut.setAttribute("rx", "22");
-        cut.setAttribute("fill", "black"); // noir = “caché”
+        cut.setAttribute("fill", "black");
         mask.appendChild(cut);
       }
     }
 
-    // ✅ crée path/circle si manquants
     function ensureSvgFor(id){
       const svg = must("lines");
 
@@ -448,27 +447,31 @@
       if(!p){
         p = document.createElementNS(SVG_NS,"path");
         p.setAttribute("id", `p-${id}`);
-        p.setAttribute("stroke", "url(#g)");
-        p.setAttribute("stroke-width", id === "medias" ? "6.2" : "4.8");
-        p.setAttribute("fill", "none");
-        p.setAttribute("filter", "url(#glow)");
-        p.setAttribute("stroke-linecap", "round");
-        p.setAttribute("stroke-opacity", "1");
-        p.setAttribute("mask", "url(#cutNodes)"); /* ✅ ne passe pas sur les cartes */
         svg.appendChild(p);
       }
+
+      // ✅ (re)applique les attributs à chaque fois (fiable)
+      p.setAttribute("stroke", "url(#g)");
+      p.setAttribute("stroke-width", id === "medias" ? "6.2" : "4.8");
+      p.setAttribute("fill", "none");
+      p.setAttribute("filter", "url(#glow)");
+      p.setAttribute("stroke-linecap", "round");
+      p.setAttribute("stroke-opacity", "1");
+      p.setAttribute("mask", "url(#cutNodes)");
+      p.setAttribute("vector-effect", "non-scaling-stroke");
 
       let c = document.getElementById(`c-${id}`);
       if(!c){
         c = document.createElementNS(SVG_NS,"circle");
         c.setAttribute("id", `c-${id}`);
-        c.setAttribute("r", "4.6");
-        c.setAttribute("fill", "#ffffff");
-        c.setAttribute("opacity", ".92");
-        c.setAttribute("filter", "url(#glow)");
-        /* ✅ IMPORTANT : on NE masque PAS le point (évite qu’il soit coupé) */
         svg.appendChild(c);
       }
+
+      c.setAttribute("r", "4.6");
+      c.setAttribute("fill", "#ffffff");
+      c.setAttribute("opacity", ".92");
+      c.setAttribute("filter", "url(#glow)");
+      // ✅ pas de mask sur le point (sinon il peut être coupé)
       return {p,c};
     }
 
@@ -481,7 +484,13 @@
       svg.setAttribute('width', root.width);
       svg.setAttribute('height', root.height);
 
-      // ✅ met à jour le masque à CHAQUE layout
+      // ✅ met à jour le gradient (userSpaceOnUse) pour la taille actuelle
+      const grad = document.getElementById("g");
+      grad.setAttribute("x1","0");
+      grad.setAttribute("y1","0");
+      grad.setAttribute("x2", String(root.width));
+      grad.setAttribute("y2", String(root.height));
+
       ensureCutMask(root);
 
       const cRect = rectRel(must('node-center'), root);
@@ -499,7 +508,6 @@
 
         let start, end;
 
-        // ✅ branche Médias : sort “loin” des cartes pour ne pas être coupée par le masque
         if (t.id === 'medias') {
           start = { x: cRect.cx, y: cRect.bottom + SAFE_GAP };
           end   = { x: tRect.cx, y: tRect.top - SAFE_GAP };
@@ -515,7 +523,6 @@
       }
     }
 
-    // ✅ plusieurs frames: évite le "calcul trop tôt" (fonts / layout)
     function stabilize(){
       let n = 0;
       const tick = () => {
