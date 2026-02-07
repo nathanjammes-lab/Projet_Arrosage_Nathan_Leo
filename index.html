@@ -247,7 +247,7 @@
               <circle id="c-medias"   r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
             </svg>
 
-            <!-- ✅ Carte centrale : boutons supprimés -->
+            <!-- carte centrale : pas de boutons -->
             <div class="node center" id="node-center">
               <div class="t">Projet Arrosage</div>
               <div class="d">De l’existant → besoin → conception → planning → réalisation.</div>
@@ -258,7 +258,7 @@
               <div class="d">Carte mentale / état des lieux.</div>
               <div class="links">
                 <a class="pill blue" target="_blank" rel="noopener"
-                   href="https://nathanjammes-lab.github.io/Projet_Arosage/carte%20mentale/MVHtmlExport/index.htm">
+                  href="https://nathanjammes-lab.github.io/Projet_Arosage/carte%20mentale/MVHtmlExport/index.htm">
                   Ouvrir
                 </a>
               </div>
@@ -269,7 +269,7 @@
               <div class="d">Cahier des charges, contraintes.</div>
               <div class="links">
                 <a class="pill blue" target="_blank" rel="noopener"
-                   href="https://raw.githubusercontent.com/nathanjammes-lab/Projet_Arosage/refs/heads/main/analyse_besoin/analyse_besoin.jpg">
+                  href="https://raw.githubusercontent.com/nathanjammes-lab/Projet_Arosage/refs/heads/main/analyse_besoin/analyse_besoin.jpg">
                   Voir (image)
                 </a>
               </div>
@@ -280,11 +280,11 @@
               <div class="d">Pièces modélisées (liens directs).</div>
               <div class="links">
                 <a class="pill green" target="_blank" rel="noopener"
-                   href="https://cad.onshape.com/documents/1ebdcbd39435717654714584/w/061c80a41a81f831c6c7d309/e/0c81dac8944d71dc4b8938b5?renderMode=0&uiState=69844dcf7efa5709870f5401">
+                  href="https://cad.onshape.com/documents/1ebdcbd39435717654714584/w/061c80a41a81f831c6c7d309/e/0c81dac8944d71dc4b8938b5?renderMode=0&uiState=69844dcf7efa5709870f5401">
                   Pièce 1
                 </a>
                 <a class="pill green" target="_blank" rel="noopener"
-                   href="https://cad.onshape.com/documents/1d237ad3dc8cacce2a01fc8e/w/529bf12c2ad7c537813b41eb/e/0f21f78a75b64e775cbfc654?renderMode=0&leftPanel=false&uiState=6984566eff47f1cb9f37d8b2">
+                  href="https://cad.onshape.com/documents/1d237ad3dc8cacce2a01fc8e/w/529bf12c2ad7c537813b41eb/e/0f21f78a75b64e775cbfc654?renderMode=0&leftPanel=false&uiState=6984566eff47f1cb9f37d8b2">
                   Pièce 2
                 </a>
               </div>
@@ -296,7 +296,7 @@
               <div class="links">
                 <a class="pill blue" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">Télécharger .gan</a>
                 <a class="pill blue" target="_blank" rel="noopener"
-                   href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/tree/main/projet_arrossage/planning_ganttproject">
+                  href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/tree/main/projet_arrossage/planning_ganttproject">
                   Voir dossier
                 </a>
               </div>
@@ -421,10 +421,9 @@
 
       for(const t of targets){
         const tRect = rectRel(t.node, root);
-
         let start, end;
 
-        // ✅ FIX SPÉCIAL MÉDIAS : ancrage bas-centre -> haut-centre (visible à coup sûr)
+        // ✅ Trait Médias forcé (bas centre -> haut centre)
         if (t.id === 'medias') {
           start = { x: cRect.cx, y: cRect.bottom + PAD };
           end   = { x: tRect.cx, y: tRect.top - PAD };
@@ -434,7 +433,6 @@
         }
 
         must(`p-${t.id}`).setAttribute('d', bezierPath(start, end));
-
         const dot = must(`c-${t.id}`);
         dot.setAttribute('cx', end.x);
         dot.setAttribute('cy', end.y);
