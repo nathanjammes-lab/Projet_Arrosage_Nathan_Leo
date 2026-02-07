@@ -7,27 +7,25 @@
   <style>
     :root { color-scheme: light dark; }
     body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.45; }
-    header { padding: 28px 18px; border-bottom: 1px solid rgba(127,127,127,.35); }
-    main { padding: 18px; max-width: 980px; margin: 0 auto; }
+    header { padding: 24px 16px; border-bottom: 1px solid rgba(127,127,127,.35); }
+    main { padding: 16px; max-width: 980px; margin: 0 auto; }
     h1 { margin: 0 0 8px; font-size: 28px; }
-    p { margin: 8px 0; opacity: .9; }
+    .muted { opacity: .75; font-size: 14px; }
     .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
     .btn {
       display: inline-block; padding: 10px 12px; border-radius: 10px;
       border: 1px solid rgba(127,127,127,.35); text-decoration: none;
     }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 16px; }
-    @media (min-width: 860px) { .grid { grid-template-columns: 1fr 1fr; } }
-    .card { border: 1px solid rgba(127,127,127,.35); border-radius: 14px; padding: 14px; }
+    .card { border: 1px solid rgba(127,127,127,.35); border-radius: 14px; padding: 14px; margin: 12px 0; }
     .card h2 { margin: 0 0 8px; font-size: 18px; }
     details { border-top: 1px dashed rgba(127,127,127,.35); padding-top: 10px; margin-top: 10px; }
     summary { cursor: pointer; font-weight: 600; }
     ul { margin: 8px 0 0; padding-left: 18px; }
     li { margin: 6px 0; }
-    .muted { opacity: .75; font-size: 14px; }
     code { padding: 2px 6px; border-radius: 8px; border: 1px solid rgba(127,127,127,.35); }
-    .error { color: #b00020; }
     .ok { color: #0a7b34; }
+    .warn { color: #b36b00; }
+    .err { color: #b00020; }
   </style>
 </head>
 
@@ -35,71 +33,83 @@
   <header>
     <h1>Projet Arrosage — Nathan & Léo</h1>
     <p class="muted">
-      Page web générée automatiquement depuis un dépôt <span>:contentReference[oaicite:3]{index=3}</span>.
-      (Les dossiers sont listés en ligne, sans avoir besoin d’un <code>index.html</code> dans chaque dossier.)
+      Cette page lit le contenu du dépôt via l’API GitHub, et affiche les dossiers/fichiers en ligne.
     </p>
-
     <div class="row" id="topLinks"></div>
   </header>
 
   <main>
-    <div class="grid">
-      <section class="card">
-        <h2>Liens Onshape & autres</h2>
-        <p class="muted">Modifie la liste <code>EXTERNAL_LINKS</code> dans le code pour mettre tes vrais liens.</p>
-        <ul id="externalLinks"></ul>
-      </section>
+    <section class="card">
+      <h2>Liens Onshape & autres</h2>
+      <p class="muted">Modifie <code>EXTERNAL_LINKS</code> (dans le script) pour mettre tes vrais liens.</p>
+      <ul id="externalLinks"></ul>
+    </section>
 
-      <section class="card">
-        <h2>Statut</h2>
-        <div id="status" class="muted">Chargement…</div>
-        <p class="muted">
-          Si tu vois une erreur “rate limit”, c’est la limite publique de l’API GitHub (rare avec peu de dossiers).
-        </p>
-      </section>
-    </div>
+    <section class="card">
+      <h2>Statut</h2>
+      <div id="status" class="muted">Chargement…</div>
+    </section>
 
-    <section class="card" style="margin-top:12px;">
-      <h2>Fichiers du projet (dépôt source)</h2>
+    <section class="card">
+      <h2>Racine du dépôt</h2>
+      <p class="muted">Liste exacte de ce qui existe à la racine (utile pour repérer un nom différent : majuscules/espaces).</p>
+      <details open>
+        <summary>Afficher le contenu de la racine</summary>
+        <ul id="rootList"></ul>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Dossiers “raccourcis”</h2>
       <p class="muted">
-        Les listes ci-dessous viennent du dépôt défini dans <code>SOURCE</code>. Tu peux le changer si tu copies ce site dans ton propre repo.
+        On essaie de trouver automatiquement ces dossiers (même s’ils ont des espaces/majuscules).
+        Si un dossier n’existe pas, il est marqué “introuvable” sans bloquer le reste.
       </p>
       <div id="folders"></div>
     </section>
   </main>
 
   <script>
-    // 1) SOURCE = dépôt à “afficher” sur la page (celui que tu m’as donné)
+    // ====== 1) Dépôt à afficher ======
     const SOURCE = {
       owner: "nathanjammes-lab",
       repo: "Projet_Arrosage_Nathan_Leo",
       branch: "main"
     };
 
-    // 2) Dossiers à lister (ajoute/retire si besoin)
-    const FOLDERS = [
-      { title: "Planning GanttProject", path: "planning_ganttproject" },
-      { title: "Analyse du besoin", path: "analyse_besoin" },
-      { title: "Conception Onshape", path: "conception_onshape" },
-      { title: "Documents", path: "documents" },
-      { title: "Exports", path: "exports" },
-      { title: "Autres fichiers", path: "Autres fichiers" }
-    ];
-
-    // 3) Liens externes (mets ici tes liens Onshape, Drive, etc.)
+    // ====== 2) Liens externes (Onshape, etc.) ======
     const EXTERNAL_LINKS = [
-      { label: "Onshape — Pièce 1", url: "https://cad.onshape.com/documents/..." },
-      { label: "Onshape — Pièce 2", url: "https://cad.onshape.com/documents/..." },
-      // { label: "Vidéo (YouTube non listée)", url: "https://youtu.be/..." },
+      // { label: "Onshape — Pièce 1", url: "https://cad.onshape.com/documents/..." },
+      // { label: "Onshape — Pièce 2", url: "https://cad.onshape.com/documents/..." },
     ];
 
-    // --- Helpers ---
-    const encPath = (p) => p.split("/").map(encodeURIComponent).join("/");
+    // ====== 3) Dossiers attendus (on fera une recherche “tolérante”) ======
+    const EXPECTED = [
+      { key: "planning_ganttproject", title: "Planning GanttProject" },
+      { key: "analyse_besoin",       title: "Analyse du besoin" },
+      { key: "conception_onshape",   title: "Conception Onshape" },
+      { key: "documents",            title: "Documents" },
+      { key: "exports",              title: "Exports" },
+      { key: "autres_fichiers",      title: "Autres fichiers" }
+    ];
+
+    // ====== Helpers ======
     const repoHtml = () => `https://github.com/${SOURCE.owner}/${SOURCE.repo}`;
-    const folderHtml = (path) => `${repoHtml()}/tree/${encodeURIComponent(SOURCE.branch)}/${encPath(path)}`;
-    const repoZip = () => `${repoHtml()}/archive/refs/heads/${encodeURIComponent(SOURCE.branch)}.zip`;
+    const repoZip  = () => `${repoHtml()}/archive/refs/heads/${encodeURIComponent(SOURCE.branch)}.zip`;
+
+    const encPath = (p) => p.split("/").map(encodeURIComponent).join("/");
+    const apiRoot = () =>
+      `https://api.github.com/repos/${SOURCE.owner}/${SOURCE.repo}/contents?ref=${encodeURIComponent(SOURCE.branch)}`;
     const apiContents = (path) =>
       `https://api.github.com/repos/${SOURCE.owner}/${SOURCE.repo}/contents/${encPath(path)}?ref=${encodeURIComponent(SOURCE.branch)}`;
+
+    function normalizeName(s) {
+      return (s || "")
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")   // enlève accents
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "_")                       // espaces/symboles -> _
+        .replace(/^_+|_+$/g, "");
+    }
 
     function bytesToHuman(n) {
       if (typeof n !== "number") return "";
@@ -109,19 +119,18 @@
       return `${v.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
     }
 
-    function a(href, text, extra = {}) {
-      const el = document.createElement("a");
-      el.href = href;
-      el.textContent = text;
-      el.target = extra.target ?? "_blank";
-      el.rel = extra.rel ?? "noopener";
-      if (extra.download) el.download = "";
-      return el;
+    function link(href, text) {
+      const a = document.createElement("a");
+      a.href = href;
+      a.textContent = text;
+      a.target = "_blank";
+      a.rel = "noopener";
+      return a;
     }
 
     function liLink(href, label, meta) {
       const li = document.createElement("li");
-      li.appendChild(a(href, label));
+      li.appendChild(link(href, label));
       if (meta) {
         const span = document.createElement("span");
         span.className = "muted";
@@ -131,43 +140,13 @@
       return li;
     }
 
-    async function fetchDir(path) {
-      const res = await fetch(apiContents(path));
-      if (!res.ok) throw new Error(`API ${res.status} sur ${path}`);
+    async function fetchJson(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`${res.status} sur ${url}`);
       return await res.json();
     }
 
-    function renderFolderBlock(folder, items) {
-      const wrap = document.createElement("div");
-      wrap.style.margin = "12px 0";
-      wrap.style.padding = "12px";
-      wrap.style.border = "1px solid rgba(127,127,127,.35)";
-      wrap.style.borderRadius = "12px";
-
-      const h = document.createElement("div");
-      h.style.display = "flex";
-      h.style.justifyContent = "space-between";
-      h.style.gap = "10px";
-      h.style.flexWrap = "wrap";
-
-      const title = document.createElement("strong");
-      title.textContent = folder.title;
-
-      const links = document.createElement("span");
-      links.appendChild(a(folderHtml(folder.path), "Voir le dossier sur GitHub"));
-
-      h.appendChild(title);
-      h.appendChild(links);
-      wrap.appendChild(h);
-
-      const details = document.createElement("details");
-      const summary = document.createElement("summary");
-      summary.textContent = "Afficher la liste des fichiers";
-      details.appendChild(summary);
-
-      const ul = document.createElement("ul");
-
-      // Tri: dossiers d’abord, puis fichiers, puis alpha
+    function renderItemsList(ul, items) {
       items.sort((x, y) => {
         const tx = x.type === "dir" ? 0 : 1;
         const ty = y.type === "dir" ? 0 : 1;
@@ -179,54 +158,113 @@
         if (it.type === "dir") {
           ul.appendChild(liLink(it.html_url, `${it.name}/`, "dossier"));
         } else if (it.type === "file") {
-          // download_url = lien direct (pratique pour images, pdf, mp4, .gan…)
           const meta = it.size != null ? bytesToHuman(it.size) : "";
           ul.appendChild(liLink(it.download_url || it.html_url, it.name, meta));
-        } else {
-          ul.appendChild(liLink(it.html_url || "#", it.name || "(élément)", it.type));
         }
       }
+    }
 
-      details.appendChild(ul);
-      wrap.appendChild(details);
+    function folderBlock(title, statusText, statusClass) {
+      const wrap = document.createElement("div");
+      wrap.style.margin = "10px 0";
+      wrap.style.padding = "12px";
+      wrap.style.border = "1px solid rgba(127,127,127,.35)";
+      wrap.style.borderRadius = "12px";
+
+      const head = document.createElement("div");
+      head.style.display = "flex";
+      head.style.justifyContent = "space-between";
+      head.style.flexWrap = "wrap";
+      head.style.gap = "8px";
+
+      const t = document.createElement("strong");
+      t.textContent = title;
+
+      const s = document.createElement("span");
+      s.className = statusClass + " muted";
+      s.textContent = statusText;
+
+      head.appendChild(t);
+      head.appendChild(s);
+      wrap.appendChild(head);
+
       return wrap;
     }
 
-    // --- Render top / external links ---
-    (function initStatic() {
+    // ====== Init static links ======
+    (function init() {
       const top = document.getElementById("topLinks");
-      top.appendChild(a(repoHtml(), "Dépôt GitHub"));
-      top.appendChild(a(repoZip(), "Télécharger le dépôt (ZIP)"));
+      top.appendChild(link(repoHtml(), "Dépôt GitHub"));
+      top.appendChild(link(repoZip(), "Télécharger le dépôt (ZIP)"));
 
       const ext = document.getElementById("externalLinks");
-      for (const l of EXTERNAL_LINKS) {
-        if (!l.url || l.url.includes("...")) continue;
-        ext.appendChild(liLink(l.url, l.label));
-      }
-      if (!ext.children.length) {
+      if (!EXTERNAL_LINKS.length) {
         ext.appendChild(document.createElement("li")).textContent =
-          "Ajoute tes liens dans EXTERNAL_LINKS (en haut du script).";
+          "Ajoute tes liens dans EXTERNAL_LINKS (dans le code).";
+      } else {
+        for (const l of EXTERNAL_LINKS) ext.appendChild(liLink(l.url, l.label));
       }
     })();
 
-    // --- Load & render folders ---
+    // ====== Main ======
     (async function main() {
       const status = document.getElementById("status");
+      const rootList = document.getElementById("rootList");
       const foldersEl = document.getElementById("folders");
 
       try {
-        status.innerHTML = `<span class="ok">OK</span> — lecture du dépôt : <code>${SOURCE.owner}/${SOURCE.repo}</code>`;
-        for (const f of FOLDERS) {
-          const items = await fetchDir(f.path);
-          foldersEl.appendChild(renderFolderBlock(f, items));
+        status.innerHTML = `<span class="ok">OK</span> — lecture du dépôt <code>${SOURCE.owner}/${SOURCE.repo}</code> (branche <code>${SOURCE.branch}</code>)`;
+
+        // 1) Racine
+        const rootItems = await fetchJson(apiRoot());
+        renderItemsList(rootList, rootItems);
+
+        // 2) Map des dossiers trouvés (tolérant aux espaces/majuscules)
+        const dirMap = new Map();
+        for (const it of rootItems) {
+          if (it.type === "dir") dirMap.set(normalizeName(it.name), it.name);
         }
+
+        // 3) Dossiers attendus
+        for (const exp of EXPECTED) {
+          const actualName = dirMap.get(exp.key);
+
+          if (!actualName) {
+            foldersEl.appendChild(folderBlock(exp.title, "introuvable (nom différent ou pas à la racine)", "warn"));
+            continue;
+          }
+
+          const block = folderBlock(exp.title, `trouvé : ${actualName}`, "ok");
+          const details = document.createElement("details");
+          const summary = document.createElement("summary");
+          summary.textContent = "Afficher les fichiers";
+          details.appendChild(summary);
+
+          const ul = document.createElement("ul");
+          details.appendChild(ul);
+          block.appendChild(details);
+
+          // Charge la liste au moment d’ouvrir (moins d’appels API)
+          let loaded = false;
+          details.addEventListener("toggle", async () => {
+            if (!details.open || loaded) return;
+            loaded = true;
+            try {
+              const items = await fetchJson(apiContents(actualName));
+              renderItemsList(ul, items);
+            } catch (e) {
+              const li = document.createElement("li");
+              li.className = "err";
+              li.textContent = `Erreur de lecture du dossier : ${e.message}`;
+              ul.appendChild(li);
+            }
+          });
+
+          foldersEl.appendChild(block);
+        }
+
       } catch (e) {
-        status.innerHTML = `<span class="error">Erreur</span> — ${String(e.message || e)}`;
-        const p = document.createElement("p");
-        p.className = "muted";
-        p.textContent =
-          "Astuce : si le dépôt est privé, ou si le nom du dossier n’est pas exact (majuscules/espaces), l’API échoue.";
-        foldersEl.appendChild(p);
+        status.innerHTML = `<span class="err">Erreur</span> — ${e.message}`;
       }
     })();
   </script>
