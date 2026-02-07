@@ -121,12 +121,13 @@
       border: 1px solid rgba(255,255,255,.18);
     }
 
+    /* ✅ IMPORTANT : le SVG au-dessus des cartes (sinon la grosse ombre du centre “mange” la branche Médias) */
     .lines{
       position:absolute; inset:0;
       width:100%; height:100%;
       pointer-events:none;
       opacity:1;
-      z-index:1;
+      z-index:6; /* ✅ au-dessus des .node (z-index:2) */
     }
 
     .node{
@@ -232,6 +233,7 @@
                   <stop offset="0" stop-color="#6fb6ff" stop-opacity=".98"/>
                   <stop offset="1" stop-color="#66e6b3" stop-opacity=".90"/>
                 </linearGradient>
+
                 <filter id="glow">
                   <feGaussianBlur stdDeviation="2.2" result="b"/>
                   <feMerge>
@@ -239,6 +241,12 @@
                     <feMergeNode in="SourceGraphic"/>
                   </feMerge>
                 </filter>
+
+                <!-- ✅ Masque: on affiche tout en blanc, puis on “découpe” des trous noirs sous les cartes -->
+                <mask id="cutNodes" maskUnits="userSpaceOnUse">
+                  <rect id="cut-bg" x="0" y="0" width="1" height="1" fill="white"></rect>
+                  <!-- les rectangles noirs (trous) sont ajoutés par le JS -->
+                </mask>
               </defs>
               <!-- ✅ le JS crée automatiquement tous les traits/points -->
             </svg>
@@ -322,6 +330,7 @@
 
   <script>
     const PAD = 10;
+    const CUT_PAD = 10; // marge autour des cartes “trouées” (reste <= PAD)
 
     function must(id){
       const el = document.getElementById(id);
@@ -395,29 +404,84 @@
       }
     }
 
-    // ✅ crée path/circle si manquants (donc le trait "Médias" ne peut plus disparaître)
+    const SVG_NS = "http://www.w3.org/2000/svg";
+
+    // ✅ masque: on “troue” sous les cartes pour éviter que les traits passent dessus
+    function ensureCutMask(rootRect){
+      const svg = must("lines");
+      const defs = svg.querySelector("defs");
+      let mask = svg.querySelector("#cutNodes");
+      if(!mask){
+        // au cas où (mais dans notre HTML il existe déjà)
+        mask = document.createElementNS(SVG_NS, "mask");
+        mask.setAttribute("id", "cutNodes");
+        mask.setAttribute("maskUnits", "userSpaceOnUse");
+        const bg = document.createElementNS(SVG_NS, "rect");
+        bg.setAttribute("id", "cut-bg");
+        bg.setAttribute("fill", "white");
+        mask.appendChild(bg);
+        defs.appendChild(mask);
+      }
+
+      const bg = mask.querySelector("#cut-bg");
+      bg.setAttribute("x", "0");
+      bg.setAttribute("y", "0");
+      bg.setAttribute("width", String(rootRect.width));
+      bg.setAttribute("height", String(rootRect.height));
+
+      // supprime les anciens “trous”
+      mask.querySelectorAll("rect[data-cut]").forEach(r => r.remove());
+
+      const nodeIds = [
+        "node-center",
+        "node-recherche",
+        "node-besoin",
+        "node-onshape",
+        "node-planning",
+        "node-medias"
+      ];
+
+      for(const id of nodeIds){
+        const rr = rectRel(must(id), rootRect);
+        const cut = document.createElementNS(SVG_NS, "rect");
+        cut.setAttribute("data-cut", id);
+        cut.setAttribute("x", String(rr.left - CUT_PAD));
+        cut.setAttribute("y", String(rr.top - CUT_PAD));
+        cut.setAttribute("width", String(rr.width + 2*CUT_PAD));
+        cut.setAttribute("height", String(rr.height + 2*CUT_PAD));
+        cut.setAttribute("rx", "22");
+        cut.setAttribute("fill", "black"); // noir = “caché”
+        mask.appendChild(cut);
+      }
+    }
+
+    // ✅ crée path/circle si manquants
     function ensureSvgFor(id){
       const svg = must("lines");
 
       let p = document.getElementById(`p-${id}`);
       if(!p){
-        p = document.createElementNS("http://www.w3.org/2000/svg","path");
+        p = document.createElementNS(SVG_NS,"path");
         p.setAttribute("id", `p-${id}`);
         p.setAttribute("stroke", "url(#g)");
-        p.setAttribute("stroke-width", id === "medias" ? "5.6" : "4.6");
+        p.setAttribute("stroke-width", id === "medias" ? "6.2" : "4.8"); /* un poil plus épais */
         p.setAttribute("fill", "none");
         p.setAttribute("filter", "url(#glow)");
         p.setAttribute("stroke-linecap", "round");
+        p.setAttribute("stroke-opacity", "1");
+        p.setAttribute("mask", "url(#cutNodes)"); /* ✅ ne passe pas sur les cartes */
         svg.appendChild(p);
       }
 
       let c = document.getElementById(`c-${id}`);
       if(!c){
-        c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        c = document.createElementNS(SVG_NS,"circle");
         c.setAttribute("id", `c-${id}`);
-        c.setAttribute("r", "3.8");
-        c.setAttribute("fill", "rgba(255,255,255,.85)");
-        c.setAttribute("opacity", ".50");
+        c.setAttribute("r", "4.6");
+        c.setAttribute("fill", "#ffffff");
+        c.setAttribute("opacity", ".92");
+        c.setAttribute("filter", "url(#glow)");
+        c.setAttribute("mask", "url(#cutNodes)");
         svg.appendChild(c);
       }
       return {p,c};
@@ -431,6 +495,9 @@
       svg.setAttribute('viewBox', `0 0 ${root.width} ${root.height}`);
       svg.setAttribute('width', root.width);
       svg.setAttribute('height', root.height);
+
+      // ✅ met à jour le masque à CHAQUE layout
+      ensureCutMask(root);
 
       const cRect = rectRel(must('node-center'), root);
 
