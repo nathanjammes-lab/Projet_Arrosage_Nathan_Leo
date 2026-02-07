@@ -4,83 +4,610 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Projet Arrosage — Nathan & Léo</title>
+
   <style>
-    :root { color-scheme: light dark; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.45; }
-    header { padding: 24px 16px; border-bottom: 1px solid rgba(127,127,127,.35); }
-    main { padding: 16px; max-width: 980px; margin: 0 auto; }
-    h1 { margin: 0 0 6px; font-size: 28px; }
-    .muted { opacity: .75; font-size: 14px; }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-    .btn { display: inline-block; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(127,127,127,.35); text-decoration: none; }
-    .card { border: 1px solid rgba(127,127,127,.35); border-radius: 14px; padding: 14px; margin: 12px 0; }
-    .card h2 { margin: 0 0 8px; font-size: 18px; }
-    ul { margin: 8px 0 0; padding-left: 18px; }
-    li { margin: 6px 0; }
-    img { max-width: 100%; height: auto; border: 1px solid rgba(127,127,127,.35); border-radius: 10px; margin: 10px 0; }
-    video { max-width: 100%; border: 1px solid rgba(127,127,127,.35); border-radius: 10px; }
+    :root{
+      --bg1:#0b3d2e;
+      --bg2:#0a2740;
+      --card: rgba(255,255,255,.10);
+      --card2: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.22);
+      --txt: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --accent:#66e6b3;
+      --accent2:#6fb6ff;
+      --shadow: 0 18px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 1100px;
+    }
+
+    * { box-sizing: border-box; }
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--txt);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(102,230,179,.25), transparent 55%),
+        radial-gradient(900px 600px at 85% 0%, rgba(111,182,255,.25), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    /* Motif "gouttes" (pur CSS) */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.12) 0 2px, transparent 3px),
+        radial-gradient(circle at 40% 70%, rgba(255,255,255,.10) 0 2px, transparent 3px),
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,.10) 0 2px, transparent 3px),
+        radial-gradient(circle at 85% 75%, rgba(255,255,255,.08) 0 2px, transparent 3px),
+        radial-gradient(circle at 10% 85%, rgba(255,255,255,.08) 0 2px, transparent 3px);
+      background-size: 260px 260px;
+      opacity:.55;
+      filter: blur(.1px);
+    }
+
+    a{color:inherit;}
+    .wrap{max-width:var(--max); margin:0 auto; padding: 18px;}
+    .topbar{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: rgba(0,0,0,.20);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .topbar .wrap{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px;}
+    .badge{
+      font-size:12px; padding:4px 8px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.20);
+      color: var(--muted);
+      background: rgba(255,255,255,.06);
+    }
+    nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+    nav a{
+      text-decoration:none;
+      font-size:13px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid transparent;
+      color: var(--muted);
+    }
+    nav a:hover{border-color: rgba(255,255,255,.18); color: var(--txt); background: rgba(255,255,255,.06);}
+
+    .hero{
+      margin-top:14px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    /* SVG "sprinkler + jets" en fond (data URI) */
+    .hero::before{
+      content:"";
+      position:absolute; inset:-40px -40px -60px -40px;
+      opacity:.22;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='500' viewBox='0 0 1200 500'%3E%3Cg fill='none' stroke='white' stroke-opacity='.9'%3E%3Cpath d='M130 380c70-130 200-210 340-220 150-12 300 60 430 195' stroke-width='3'/%3E%3Cpath d='M140 388c90-170 240-270 400-280 180-11 350 80 480 240' stroke-width='2' stroke-opacity='.55'/%3E%3Cpath d='M90 410c40-70 90-130 170-170' stroke-width='2' stroke-opacity='.55'/%3E%3Cpath d='M1020 420c-55-90-120-150-210-185' stroke-width='2' stroke-opacity='.55'/%3E%3Ccircle cx='210' cy='360' r='8' stroke-width='2'/%3E%3Ccircle cx='230' cy='332' r='5' stroke-width='2'/%3E%3Ccircle cx='260' cy='310' r='4' stroke-width='2'/%3E%3Ccircle cx='1000' cy='360' r='8' stroke-width='2'/%3E%3Ccircle cx='980' cy='330' r='5' stroke-width='2'/%3E%3Ccircle cx='950' cy='308' r='4' stroke-width='2'/%3E%3Cpath d='M585 410v-60c0-16 12-28 28-28h20c16 0 28 12 28 28v60' stroke-width='3'/%3E%3Cpath d='M585 350h76' stroke-width='3'/%3E%3Cpath d='M612 320v-18h22v18' stroke-width='3'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+      filter: blur(.2px);
+      pointer-events:none;
+    }
+
+    .hero-inner{position:relative; padding: 24px; display:grid; gap:14px;}
+    .title{
+      font-size: clamp(26px, 4vw, 42px);
+      margin:0;
+      line-height:1.05;
+    }
+    .subtitle{margin:0; color: var(--muted); max-width: 75ch;}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:4px;}
+    .btn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.18);
+      text-decoration:none;
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+    }
+    .btn:hover{background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.24);}
+    .btn.primary{
+      border-color: rgba(102,230,179,.55);
+      background: linear-gradient(180deg, rgba(102,230,179,.28), rgba(102,230,179,.12));
+    }
+    .btn .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(102,230,179,.18);
+    }
+
+    .grid{
+      margin-top: 14px;
+      display:grid;
+      gap: 14px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px){
+      .grid{grid-template-columns: 1.1fr .9fr;}
+    }
+
+    .card{
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .card h2{margin:0; font-size: 16px;}
+    .pill{
+      font-size:12px; padding:6px 10px; border-radius:999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .card .bd{padding: 14px 16px;}
+    .list{margin:0; padding-left:18px;}
+    .list li{margin: 7px 0;}
+    .muted{color: var(--muted);}
+
+    .kpi{
+      display:grid; gap:10px;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+    @media (min-width: 900px){
+      .kpi{grid-template-columns: repeat(4, minmax(0,1fr));}
+    }
+    .kpi .tile{
+      padding: 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.15);
+    }
+    .kpi .num{font-weight:900; font-size: 18px;}
+    .kpi .lbl{font-size:12px; color: var(--muted); margin-top:2px;}
+
+    .media{
+      display:grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px){
+      .media{grid-template-columns: 1fr 1fr;}
+    }
+    figure{margin:0;}
+    figure .cap{margin-top:6px; font-size:13px; color: var(--muted);}
+    img, video{
+      width:100%;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.12);
+      display:block;
+    }
+
+    .table{
+      width:100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      overflow:hidden;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .table th, .table td{
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      vertical-align: top;
+    }
+    .table th{color: var(--muted); font-weight:700; text-align:left; background: rgba(0,0,0,.12);}
+    .table tr:last-child td{border-bottom:none;}
+    .link{
+      color: white;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(255,255,255,.35);
+    }
+    .link:hover{border-bottom-color: rgba(102,230,179,.7);}
+
+    footer{padding:18px 0 36px; color: var(--muted); text-align:center;}
+    .note{
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.16);
+    }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>Projet Arrosage — Nathan & Léo</h1>
-    <p class="muted">Planning + documents + images + vidéo.</p>
-
-    <div class="row">
-      <a class="btn" href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo" target="_blank" rel="noopener">
-        Dépôt GitHub
-      </a>
-      <a class="btn" href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/archive/refs/heads/main.zip" target="_blank" rel="noopener">
-        Télécharger (ZIP)
-      </a>
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brand">
+        <span>💧 Projet Arrosage</span>
+        <span class="badge">Nathan & Léo</span>
+      </div>
+      <nav>
+        <a href="#acces">Accès</a>
+        <a href="#medias">Médias</a>
+        <a href="#onshape">Onshape</a>
+        <a href="#gantt">Planning</a>
+      </nav>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <section class="card">
-      <h2>Accès rapide</h2>
-      <ul>
-        <li>
-          <a href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">
-            Télécharger le planning (GanttProject .gan)
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-inner">
+        <h1 class="title">Projet Arrosage — Nathan & Léo</h1>
+        <p class="subtitle">
+          Planning GanttProject + documents + conception Onshape + médias (croquis, schéma, vidéo).
+        </p>
+
+        <div class="actions" id="acces">
+          <a class="btn primary" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">
+            <span class="dot"></span> Télécharger le planning (.gan)
           </a>
-          <span class="muted"> — chemin : <code>projet_arrossage/planning_ganttproject/</code></span>
-        </li>
+          <a class="btn" href="autres_fichiers/video.mp4">▶️ Vidéo</a>
+          <a class="btn" href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo" target="_blank" rel="noopener">↗️ Dépôt GitHub</a>
+          <a class="btn" href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/archive/refs/heads/main.zip" target="_blank" rel="noopener">⬇️ ZIP</a>
+        </div>
 
-        <li><a href="autres_fichiers/Croquis.jpg" target="_blank" rel="noopener">Croquis (jpg)</a></li>
-        <li><a href="autres_fichiers/Programe.png" target="_blank" rel="noopener">Programme (png)</a></li>
-        <li><a href="autres_fichiers/Systeme_d_arrosage_FINI.drawio.png" target="_blank" rel="noopener">Schéma (png)</a></li>
-        <li><a href="autres_fichiers/video.mp4" target="_blank" rel="noopener">Vidéo (mp4)</a></li>
-      </ul>
+        <div class="kpi" id="kpis">
+          <div class="tile"><div class="num" id="kpiTasks">—</div><div class="lbl">Tâches trouvées (.gan)</div></div>
+          <div class="tile"><div class="num" id="kpiLinks">—</div><div class="lbl">Liens web trouvés</div></div>
+          <div class="tile"><div class="num" id="kpiOnshape">—</div><div class="lbl">Liens Onshape</div></div>
+          <div class="tile"><div class="num" id="kpiLocalFix">—</div><div class="lbl">Liens locaux convertis</div></div>
+        </div>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>Aperçu</h2>
+    <div class="grid">
+      <section class="card" id="medias">
+        <div class="hd">
+          <h2>📷 Médias du projet</h2>
+          <span class="pill">Dossier : autres_fichiers/</span>
+        </div>
+        <div class="bd">
+          <div class="media">
+            <figure>
+              <img src="autres_fichiers/Croquis.jpg" alt="Croquis">
+              <div class="cap">Croquis</div>
+            </figure>
+            <figure>
+              <img src="autres_fichiers/Programe.png" alt="Programme">
+              <div class="cap">Programme</div>
+            </figure>
+            <figure>
+              <img src="autres_fichiers/Systeme_d_arrosage_FINI.drawio.png" alt="Schéma du système">
+              <div class="cap">Schéma du système</div>
+            </figure>
+            <figure>
+              <video controls preload="metadata">
+                <source src="autres_fichiers/video.mp4" type="video/mp4">
+                Ton navigateur ne supporte pas la vidéo.
+              </video>
+              <div class="cap">Vidéo de présentation</div>
+            </figure>
+          </div>
 
-      <h3 style="margin:10px 0 6px;">Croquis</h3>
-      <img src="autres_fichiers/Croquis.jpg" alt="Croquis" />
+          <div class="note" style="margin-top:12px;">
+            Astuce : si tu ajoutes d’autres images/vidéos, mets-les dans <b>autres_fichiers/</b>
+            et ajoute-les dans cette section.
+          </div>
+        </div>
+      </section>
 
-      <h3 style="margin:10px 0 6px;">Programme</h3>
-      <img src="autres_fichiers/Programe.png" alt="Programme" />
+      <section class="card">
+        <div class="hd">
+          <h2>📌 Liens utiles</h2>
+          <span class="pill">Accès direct</span>
+        </div>
+        <div class="bd">
+          <ul class="list">
+            <li><a class="link" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">Planning (.gan)</a> <span class="muted">— GanttProject</span></li>
+            <li><a class="link" href="autres_fichiers/Croquis.jpg">Croquis</a></li>
+            <li><a class="link" href="autres_fichiers/Programe.png">Programme</a></li>
+            <li><a class="link" href="autres_fichiers/Systeme_d_arrosage_FINI.drawio.png">Schéma</a></li>
+            <li><a class="link" href="autres_fichiers/video.mp4">Vidéo</a></li>
+          </ul>
+          <div class="note" style="margin-top:12px;">
+            La section <b>Onshape</b> ci-dessous se remplit automatiquement en lisant le fichier <b>.gan</b>
+            (et les README si besoin).
+          </div>
+        </div>
+      </section>
+    </div>
 
-      <h3 style="margin:10px 0 6px;">Schéma</h3>
-      <img src="autres_fichiers/Systeme_d_arrosage_FINI.drawio.png" alt="Schéma d'arrosage" />
-
-      <h3 style="margin:10px 0 6px;">Vidéo</h3>
-      <video controls preload="metadata">
-        <source src="autres_fichiers/video.mp4" type="video/mp4">
-        Ton navigateur ne supporte pas la vidéo.
-      </video>
+    <section class="card" id="onshape" style="margin-top:14px;">
+      <div class="hd">
+        <h2>🧩 Conception Onshape (auto)</h2>
+        <span class="pill" id="onshapePill">Analyse en cours…</span>
+      </div>
+      <div class="bd">
+        <div id="onshapeBox" class="muted">Chargement des liens Onshape depuis le projet…</div>
+        <ul id="onshapeList" class="list" style="display:none;"></ul>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>Liens Onshape</h2>
-      <p class="muted">Remplace les liens ci-dessous par vos URLs Onshape (document/assemblage).</p>
-      <ul>
-        <li><a href="#" onclick="alert('Colle ici ton lien Onshape'); return false;">Onshape — Document principal</a></li>
-      </ul>
+    <section class="card" id="gantt" style="margin-top:14px;">
+      <div class="hd">
+        <h2>🗂️ Liens des tâches (extraits du planning)</h2>
+        <span class="pill">Source : projet_arrossage.gan</span>
+      </div>
+      <div class="bd">
+        <div class="muted" id="tasksHint">
+          Cette table liste les tâches qui contiennent un lien web (Onshape, pages web, etc.).
+          Les anciens liens locaux <code>file:///...</code> sont automatiquement convertis si le fichier existe dans <b>autres_fichiers/</b>.
+        </div>
+        <div style="overflow:auto; margin-top:12px;">
+          <table class="table" id="tasksTable" style="display:none;">
+            <thead>
+              <tr>
+                <th style="min-width:260px;">Tâche</th>
+                <th>Lien</th>
+                <th style="min-width:150px;">Type</th>
+              </tr>
+            </thead>
+            <tbody id="tasksBody"></tbody>
+          </table>
+        </div>
+        <div class="muted" id="tasksEmpty" style="margin-top:12px; display:none;">
+          Aucun lien trouvé dans le fichier .gan (ou format différent). Dans ce cas, mets les liens Onshape dans les propriétés de tâches (champ “Lien web”) dans GanttProject, puis re-uploade le .gan.
+        </div>
+      </div>
     </section>
-  </main>
+
+    <footer>
+      <div>💦 Site GitHub Pages — Projet_Arrosage_Nathan_Leo</div>
+      <div class="muted">Dernière mise à jour : automatique (via le dépôt)</div>
+    </footer>
+  </div>
+
+  <script>
+    // ---------- CONFIG ----------
+    const GAN_PATH = "projet_arrossage/planning_ganttproject/projet_arrossage.gan";
+
+    // fichiers que tu as mis en ligne (pour convertir les file:///... du .gan)
+    const ONLINE_FILES = new Map([
+      ["Croquis.jpg", "autres_fichiers/Croquis.jpg"],
+      ["Programe.png", "autres_fichiers/Programe.png"],
+      ["Systeme_d_arrosage_FINI.drawio.png", "autres_fichiers/Systeme_d_arrosage_FINI.drawio.png"],
+      ["video.mp4", "autres_fichiers/video.mp4"]
+    ]);
+
+    // optionnel : lire aussi des README pour trouver des liens Onshape
+    const EXTRA_TEXT_FILES = [
+      "README.md",
+      "projet_arrossage/README.md"
+    ];
+
+    // ---------- UTILS ----------
+    const $ = (id) => document.getElementById(id);
+
+    function uniq(arr){
+      return [...new Set(arr.filter(Boolean))];
+    }
+
+    function isOnshape(url){
+      return /https?:\/\/(cad\.)?onshape\.com\//i.test(url);
+    }
+
+    function extractUrls(text){
+      if(!text) return [];
+      // récupère des URLs simples (suffisant pour cad.onshape.com + autres)
+      const re = /https?:\/\/[^\s"<>()]+/g;
+      return text.match(re) || [];
+    }
+
+    function decodeHtmlEntities(s){
+      const txt = document.createElement("textarea");
+      txt.innerHTML = s;
+      return txt.value;
+    }
+
+    function lastPathSegment(url){
+      try{
+        const u = new URL(url);
+        const parts = u.pathname.split("/").filter(Boolean);
+        return decodeURIComponent(parts[parts.length-1] || "");
+      }catch(e){
+        // file:///C:/... => on prend après le dernier /
+        const clean = url.replace(/^file:\/+/, "");
+        const parts = clean.split("/").filter(Boolean);
+        return decodeURIComponent(parts[parts.length-1] || "");
+      }
+    }
+
+    function linkHtml(url, label){
+      const safe = url.replace(/"/g, "&quot;");
+      const lab = (label || url).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      return `<a class="link" href="${safe}" target="_blank" rel="noopener">${lab}</a>`;
+    }
+
+    // tente de convertir file:///... vers un fichier en ligne si le nom correspond
+    function convertLocalLink(url){
+      if(!/^file:/i.test(url)) return { url, fixed:false };
+      const name = lastPathSegment(url);
+      if(ONLINE_FILES.has(name)) return { url: ONLINE_FILES.get(name), fixed:true };
+      return { url, fixed:false };
+    }
+
+    // ---------- MAIN ----------
+    async function fetchText(path){
+      const r = await fetch(path, { cache: "no-store" });
+      if(!r.ok) throw new Error(`${r.status} sur ${path}`);
+      return await r.text();
+    }
+
+    function parseGanForTaskLinks(ganText){
+      // Le .gan est un XML (GanttProject). On parse au mieux.
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(ganText, "text/xml");
+      const tasks = Array.from(xml.getElementsByTagName("task"));
+
+      const rows = [];
+      const allUrls = [];
+
+      for(const t of tasks){
+        const name = t.getAttribute("name") || t.getAttribute("id") || "Tâche";
+        // Plusieurs formats possibles : élément webLink / attribut / texte
+        let url = "";
+
+        // 1) <webLink>...</webLink>
+        const wl = t.getElementsByTagName("webLink");
+        if(wl && wl.length){
+          // parfois uri/href, parfois textContent
+          for(const node of wl){
+            const u = node.getAttribute("uri") || node.getAttribute("href") || node.textContent || "";
+            if(u && u.trim()){
+              url = u.trim();
+              break;
+            }
+          }
+        }
+
+        // 2) attributs possibles
+        if(!url){
+          const cand = t.getAttribute("webLink") || t.getAttribute("weblink") || t.getAttribute("url") || "";
+          if(cand) url = cand.trim();
+        }
+
+        // 3) fallback : cherche une URL dans le contenu brut du noeud
+        if(!url){
+          const raw = t.outerHTML || "";
+          const urls = extractUrls(raw);
+          if(urls.length) url = urls[0];
+        }
+
+        if(url){
+          url = decodeHtmlEntities(url);
+          allUrls.push(url);
+          rows.push({ name, url });
+        }
+      }
+      return { rows, allUrls, taskCount: tasks.length };
+    }
+
+    async function collectOnshapeLinks(ganText){
+      let urls = extractUrls(ganText);
+      // + readme
+      for(const f of EXTRA_TEXT_FILES){
+        try{
+          const t = await fetchText(f);
+          urls = urls.concat(extractUrls(t));
+        }catch(e){ /* ignore */ }
+      }
+      urls = uniq(urls);
+      return urls.filter(isOnshape);
+    }
+
+    function updateKpis({taskCount, linksCount, onshapeCount, localFixedCount}){
+      $("kpiTasks").textContent = String(taskCount ?? "—");
+      $("kpiLinks").textContent = String(linksCount ?? "—");
+      $("kpiOnshape").textContent = String(onshapeCount ?? "—");
+      $("kpiLocalFix").textContent = String(localFixedCount ?? "—");
+    }
+
+    async function run(){
+      try{
+        const ganText = await fetchText(GAN_PATH);
+
+        const { rows, allUrls, taskCount } = parseGanForTaskLinks(ganText);
+        const onshapeLinks = await collectOnshapeLinks(ganText);
+
+        // ----- Onshape section -----
+        const pill = $("onshapePill");
+        const box = $("onshapeBox");
+        const list = $("onshapeList");
+
+        if(onshapeLinks.length){
+          pill.textContent = `${onshapeLinks.length} lien(s) détecté(s)`;
+          list.style.display = "";
+          box.style.display = "none";
+          list.innerHTML = "";
+          onshapeLinks.forEach((u, i) => {
+            const li = document.createElement("li");
+            li.innerHTML = `${linkHtml(u, `Onshape #${i+1}`)} <span class="muted">— ${u}</span>`;
+            list.appendChild(li);
+          });
+        }else{
+          pill.textContent = "Aucun lien détecté";
+          box.innerHTML =
+            `Je n’ai pas trouvé de lien Onshape dans le <b>.gan</b> ou les README.<br>` +
+            `➡️ Ajoute les URLs Onshape dans GanttProject (propriété de tâche → “Lien web”), ` +
+            `ou mets-les dans un README, puis re-uploade.`;
+        }
+
+        // ----- Tasks table -----
+        const tbody = $("tasksBody");
+        const table = $("tasksTable");
+        const empty = $("tasksEmpty");
+
+        tbody.innerHTML = "";
+        let localFixed = 0;
+
+        const linkRows = rows.map(r => {
+          const converted = convertLocalLink(r.url);
+          if(converted.fixed) localFixed++;
+          const type =
+            isOnshape(converted.url) ? "Onshape" :
+            /^file:/i.test(r.url) ? "Local (non web)" :
+            "Web";
+
+          return {
+            name: r.name,
+            url: converted.url,
+            type: converted.fixed ? `${type} (converti)` : type
+          };
+        });
+
+        if(linkRows.length){
+          table.style.display = "";
+          empty.style.display = "none";
+
+          linkRows.forEach(r => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td><b>${r.name.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</b></td>
+              <td>${linkHtml(r.url, "Ouvrir")}</td>
+              <td class="muted">${r.type}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }else{
+          table.style.display = "none";
+          empty.style.display = "";
+        }
+
+        // ----- KPIs -----
+        updateKpis({
+          taskCount,
+          linksCount: uniq(allUrls).length,
+          onshapeCount: onshapeLinks.length,
+          localFixedCount: localFixed
+        });
+
+      } catch (e){
+        $("onshapePill").textContent = "Erreur";
+        $("onshapeBox").innerHTML =
+          `Impossible de lire le fichier <code>${GAN_PATH}</code>.<br>` +
+          `<span class="muted">${String(e.message || e)}</span>`;
+        $("tasksEmpty").style.display = "";
+        updateKpis({taskCount:"—", linksCount:"—", onshapeCount:"—", localFixedCount:"—"});
+      }
+    }
+
+    run();
+  </script>
 </body>
 </html>
