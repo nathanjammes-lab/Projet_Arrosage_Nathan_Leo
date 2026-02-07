@@ -4,56 +4,89 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Projet Arrosage — Nathan & Léo</title>
+
   <style>
     :root{
-      --bg1:#083a2a;
-      --bg2:#0a2440;
+      /* Fond plus BLEU */
+      --bg1:#061a2f;
+      --bg2:#083a66;
+      --bg3:#045b8d;
+
       --card: rgba(255,255,255,.10);
       --stroke: rgba(255,255,255,.20);
-      --txt: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.70);
-      --accent:#66e6b3;
-      --accent2:#6fb6ff;
-      --shadow: 0 18px 42px rgba(0,0,0,.35);
+      --txt: rgba(255,255,255,.94);
+      --muted: rgba(255,255,255,.72);
+
+      --accent:#6fb6ff;   /* bleu clair */
+      --accent2:#66e6b3;  /* vert eau */
+
+      --shadow: 0 18px 44px rgba(0,0,0,.35);
       --r: 18px;
       --max: 1200px;
     }
+
     *{box-sizing:border-box;}
     html,body{height:100%;}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--txt);
+
+      /* Fond bleu + variations */
       background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(102,230,179,.22), transparent 55%),
-        radial-gradient(900px 600px at 85% 0%, rgba(111,182,255,.22), transparent 55%),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
+        radial-gradient(1100px 650px at 15% 10%, rgba(111,182,255,.28), transparent 55%),
+        radial-gradient(900px 600px at 85% 0%, rgba(102,230,179,.18), transparent 55%),
+        radial-gradient(900px 700px at 50% 110%, rgba(4,91,141,.55), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+
       overflow-x:hidden;
     }
+
+    /* Motif gouttes d’eau (plus bleu, plus dense) */
     body::before{
       content:"";
-      position:fixed; inset:0; pointer-events:none;
+      position:fixed; inset:0;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,.11) 0 2px, transparent 3px),
-        radial-gradient(circle at 40% 70%, rgba(255,255,255,.09) 0 2px, transparent 3px),
-        radial-gradient(circle at 70% 40%, rgba(255,255,255,.09) 0 2px, transparent 3px),
-        radial-gradient(circle at 85% 75%, rgba(255,255,255,.07) 0 2px, transparent 3px),
-        radial-gradient(circle at 10% 85%, rgba(255,255,255,.07) 0 2px, transparent 3px);
-      background-size: 260px 260px;
-      opacity:.55;
+        radial-gradient(circle at 10% 15%, rgba(255,255,255,.12) 0 2px, transparent 3px),
+        radial-gradient(circle at 18% 55%, rgba(255,255,255,.10) 0 2px, transparent 3px),
+        radial-gradient(circle at 26% 28%, rgba(255,255,255,.08) 0 2px, transparent 3px),
+        radial-gradient(circle at 35% 75%, rgba(255,255,255,.09) 0 2px, transparent 3px),
+        radial-gradient(circle at 44% 42%, rgba(255,255,255,.08) 0 2px, transparent 3px),
+        radial-gradient(circle at 56% 18%, rgba(255,255,255,.10) 0 2px, transparent 3px),
+        radial-gradient(circle at 66% 60%, rgba(255,255,255,.09) 0 2px, transparent 3px),
+        radial-gradient(circle at 74% 32%, rgba(255,255,255,.08) 0 2px, transparent 3px),
+        radial-gradient(circle at 83% 80%, rgba(255,255,255,.10) 0 2px, transparent 3px),
+        radial-gradient(circle at 92% 45%, rgba(255,255,255,.08) 0 2px, transparent 3px);
+      background-size: 220px 220px;
+      opacity:.65;
+      filter: blur(.15px);
     }
 
     a{color:inherit;}
+
     .wrap{max-width:var(--max); margin:0 auto; padding:18px;}
+
     header{
       position:sticky; top:0; z-index:10;
       backdrop-filter: blur(10px);
       background: rgba(0,0,0,.22);
       border-bottom: 1px solid rgba(255,255,255,.12);
     }
-    header .wrap{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
-    .brand{display:flex; align-items:center; gap:10px; font-weight:900;}
-    .badge{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.18); color:var(--muted); background: rgba(255,255,255,.06);}
+    header .wrap{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:900; letter-spacing:.2px;
+    }
+    .badge{
+      font-size:12px; padding:4px 8px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      color:var(--muted);
+      background: rgba(255,255,255,.06);
+    }
     .btn{
       display:inline-flex; align-items:center; gap:10px;
       padding:10px 12px; border-radius:999px;
@@ -62,19 +95,10 @@
       background: rgba(255,255,255,.06);
       color:var(--txt);
     }
-    .btn:hover{background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.24);}
+    .btn:hover{background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.26);}
     .btn.primary{
-      border-color: rgba(102,230,179,.55);
-      background: linear-gradient(180deg, rgba(102,230,179,.26), rgba(102,230,179,.12));
-    }
-
-    .layout{
-      display:grid; gap:14px;
-      grid-template-columns: 1fr;
-      margin-top: 14px;
-    }
-    @media (min-width: 1050px){
-      .layout{grid-template-columns: 1.1fr .9fr;}
+      border-color: rgba(111,182,255,.60);
+      background: linear-gradient(180deg, rgba(111,182,255,.28), rgba(111,182,255,.12));
     }
 
     .card{
@@ -83,6 +107,7 @@
       background: rgba(255,255,255,.08);
       box-shadow: var(--shadow);
       overflow:hidden;
+      margin-top:14px;
     }
     .card .hd{
       padding:14px 16px;
@@ -93,28 +118,41 @@
     .card .bd{padding:14px 16px;}
     .muted{color:var(--muted);}
 
-    /* --- Mind map --- */
-    .mindmap{
-      position:relative;
-      min-height: 620px;
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-    }
+    /* ---------- CARTE MENTALE ---------- */
     .map{
       position:relative;
-      height: 620px;
+      height: 650px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      overflow:hidden;
     }
+
+    /* Lignes (desktop) */
+    .lines{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      pointer-events:none;
+      opacity:.75;
+    }
+    /* Sur mobile, on masque les lignes (sinon elles ne “collent” plus aux positions) */
+    @media (max-width: 780px){
+      .lines{display:none;}
+      .map{height: 980px;}
+    }
+
     .node{
       position:absolute;
-      width: 220px;
+      width: 240px;
       padding: 12px 12px;
-      border-radius: 16px;
+      border-radius: 18px;
       border:1px solid rgba(255,255,255,.18);
       background: rgba(0,0,0,.18);
-      box-shadow: 0 10px 28px rgba(0,0,0,.25);
+      box-shadow: 0 12px 28px rgba(0,0,0,.25);
     }
     .node .t{font-weight:900; margin-bottom:6px;}
     .node .d{font-size:13px; color:var(--muted); margin-bottom:10px;}
     .node .links{display:flex; flex-wrap:wrap; gap:8px;}
+
     .pill{
       display:inline-flex; align-items:center; justify-content:center;
       padding:8px 10px;
@@ -125,57 +163,36 @@
       font-size: 13px;
       white-space:nowrap;
     }
-    .pill:hover{background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.24);}
-    .pill.on{border-color: rgba(111,182,255,.55);}
-    .pill.go{border-color: rgba(102,230,179,.55);}
+    .pill:hover{background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.26);}
+    .pill.blue{border-color: rgba(111,182,255,.55);}
+    .pill.green{border-color: rgba(102,230,179,.55);}
 
-    /* centre */
+    /* Centre */
     .center{
       left: 50%; top: 50%;
       transform: translate(-50%, -50%);
-      width: 260px;
-      background: linear-gradient(180deg, rgba(102,230,179,.20), rgba(0,0,0,.20));
-      border-color: rgba(102,230,179,.40);
+      width: 280px;
+      background: linear-gradient(180deg, rgba(111,182,255,.22), rgba(0,0,0,.20));
+      border-color: rgba(111,182,255,.38);
     }
 
-    /* positions (desktop) */
+    /* Positions desktop */
     .n-recherche{ left: 6%; top: 10%; }
-    .n-besoin  { left: 6%; top: 62%; }
-    .n-onshape { right: 6%; top: 18%; }
+    .n-onshape { right: 6%; top: 14%; }
     .n-planning{ right: 6%; top: 62%; }
-    .n-medias  { left: 50%; top: 92%; transform: translate(-50%, -50%); width: 320px; }
+    .n-besoin  { left: 6%; top: 62%; }
+    .n-medias  { left: 50%; top: 92%; transform: translate(-50%, -50%); width: 340px; }
 
-    /* responsive (mobile) : on empile */
+    /* Mobile : empilement vertical propre */
     @media (max-width: 780px){
-      .map{ height: 900px; }
       .center{ top: 12%; }
       .n-recherche{ left: 50%; top: 30%; transform: translate(-50%, -50%); }
       .n-onshape { left: 50%; top: 48%; transform: translate(-50%, -50%); }
       .n-planning{ left: 50%; top: 66%; transform: translate(-50%, -50%); }
       .n-besoin  { left: 50%; top: 84%; transform: translate(-50%, -50%); }
-      .n-medias  { display:none; }
+      .n-medias  { left: 50%; top: 96%; transform: translate(-50%, -50%); width: 240px; }
     }
 
-    /* svg lines */
-    .lines{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      pointer-events:none;
-      opacity:.55;
-    }
-
-    /* medias preview */
-    .media-grid{display:grid; gap:12px; grid-template-columns: 1fr;}
-    @media (min-width:1050px){ .media-grid{grid-template-columns: 1fr 1fr;} }
-    img, video{
-      width:100%;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.14);
-      display:block;
-    }
-    figure{margin:0;}
-    figure .cap{margin-top:6px; font-size:13px; color:var(--muted);}
     footer{padding:18px 0 36px; text-align:center; color:var(--muted);}
     code{padding:2px 6px; border-radius:10px; border:1px solid rgba(255,255,255,.16); background: rgba(0,0,0,.14);}
   </style>
@@ -195,171 +212,129 @@
   </header>
 
   <div class="wrap">
-    <div class="layout">
-      <!-- CARTE MENTALE -->
-      <section class="card mindmap" id="carte">
-        <div class="hd">
-          <h2>🧠 Carte mentale du projet</h2>
-          <span class="muted">Clique sur les branches</span>
-        </div>
-        <div class="bd">
-          <div class="map">
-            <!-- Lignes -->
-            <svg class="lines" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#66e6b3" stop-opacity=".9"/>
-                  <stop offset="1" stop-color="#6fb6ff" stop-opacity=".9"/>
-                </linearGradient>
-              </defs>
-              <!-- centre vers noeuds (desktop) -->
-              <path d="M500 310 C380 250, 240 180, 120 120" stroke="url(#g)" stroke-width="3" fill="none"/>
-              <path d="M500 310 C380 360, 240 430, 120 500" stroke="url(#g)" stroke-width="3" fill="none"/>
-              <path d="M500 310 C620 250, 760 200, 880 160" stroke="url(#g)" stroke-width="3" fill="none"/>
-              <path d="M500 310 C620 360, 760 430, 880 500" stroke="url(#g)" stroke-width="3" fill="none"/>
-              <path d="M500 310 C500 420, 500 500, 500 570" stroke="url(#g)" stroke-width="3" fill="none" opacity=".55"/>
-            </svg>
-
-            <!-- Centre -->
-            <div class="node center">
-              <div class="t">Projet Arrosage</div>
-              <div class="d">De l’existant → besoin → conception → planning → réalisation.</div>
-              <div class="links">
-                <a class="pill go" href="#medias">📷 Médias</a>
-                <a class="pill on" href="#liens">🔗 Liens</a>
-              </div>
-            </div>
-
-            <!-- Recherche -->
-            <div class="node n-recherche">
-              <div class="t">🔎 Recherche de l’existant</div>
-              <div class="d">Carte mentale / état des lieux.</div>
-              <div class="links">
-                <a class="pill go" target="_blank" rel="noopener"
-                   href="https://nathanjammes-lab.github.io/Projet_Arosage/carte%20mentale/MVHtmlExport/index.htm">
-                  Ouvrir
-                </a>
-              </div>
-            </div>
-
-            <!-- Besoin -->
-            <div class="node n-besoin">
-              <div class="t">🧾 Besoin / analyse</div>
-              <div class="d">Cahier des charges, contraintes.</div>
-              <div class="links">
-                <!-- ⚠️ TON LIEN EST CASSÉ : remplace par le bon -->
-                <a class="pill go" target="_blank" rel="noopener"
-                   href="https://raw.githubusercontent.com/nathanjammes-lab/Projet_Arosage/refs/heads/main/analyse_besoin/analyse_besoin.jpg">
-                  Image besoin
-                </a>
-              </div>
-            </div>
-
-            <!-- Onshape -->
-            <div class="node n-onshape">
-              <div class="t">🧩 Conception Onshape</div>
-              <div class="d">Pièces modélisées (liens directs).</div>
-              <div class="links">
-                <a class="pill on" target="_blank" rel="noopener"
-                   href="https://cad.onshape.com/documents/1ebdcbd39435717654714584/w/061c80a41a81f831c6c7d309/e/0c81dac8944d71dc4b8938b5?renderMode=0&uiState=69844dcf7efa5709870f5401">
-                  Pièce 1
-                </a>
-                <a class="pill on" target="_blank" rel="noopener"
-                   href="https://cad.onshape.com/documents/1d237ad3dc8cacce2a01fc8e/w/529bf12c2ad7c537813b41eb/e/0f21f78a75b64e775cbfc654?renderMode=0&leftPanel=false&uiState=6984566eff47f1cb9f37d8b2">
-                  Pièce 2
-                </a>
-              </div>
-            </div>
-
-            <!-- Planning -->
-            <div class="node n-planning">
-              <div class="t">📅 Planning</div>
-              <div class="d">GanttProject (.gan) + suivi.</div>
-              <div class="links">
-                <a class="pill go" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">Télécharger .gan</a>
-                <a class="pill go" target="_blank" rel="noopener"
-                   href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/tree/main/projet_arrossage/planning_ganttproject">
-                  Voir dossier
-                </a>
-              </div>
-            </div>
-
-            <!-- Médias (branche du bas) -->
-            <div class="node n-medias">
-              <div class="t">📷 Médias</div>
-              <div class="d">Croquis, schéma, programme, vidéo.</div>
-              <div class="links">
-                <a class="pill go" href="#medias">Aperçu</a>
-                <a class="pill go" href="autres_fichiers/video.mp4">Vidéo</a>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- PANEL DROIT : liens + résumé -->
-      <aside class="card" id="liens">
-        <div class="hd">
-          <h2>🔗 Liens du projet</h2>
-          <span class="muted">copier / ouvrir</span>
-        </div>
-        <div class="bd">
-          <p class="muted">Liens principaux :</p>
-          <ul>
-            <li><a class="btn" style="padding:8px 10px;" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">Planning (.gan)</a></li>
-            <li><a class="btn" style="padding:8px 10px;" href="autres_fichiers/video.mp4">Vidéo</a></li>
-            <li><a class="btn" style="padding:8px 10px;" href="autres_fichiers/Croquis.jpg">Croquis</a></li>
-            <li><a class="btn" style="padding:8px 10px;" href="autres_fichiers/Programe.png">Programme</a></li>
-            <li><a class="btn" style="padding:8px 10px;" href="autres_fichiers/Systeme_d_arrosage_FINI.drawio.png">Schéma</a></li>
-          </ul>
-
-          <p class="muted" style="margin-top:14px;">Onshape :</p>
-          <ul>
-            <li><a class="btn" style="padding:8px 10px;" target="_blank" rel="noopener"
-                   href="https://cad.onshape.com/documents/1ebdcbd39435717654714584/w/061c80a41a81f831c6c7d309/e/0c81dac8944d71dc4b8938b5?renderMode=0&uiState=69844dcf7efa5709870f5401">Pièce 1</a></li>
-            <li><a class="btn" style="padding:8px 10px;" target="_blank" rel="noopener"
-                   href="https://cad.onshape.com/documents/1d237ad3dc8cacce2a01fc8e/w/529bf12c2ad7c537813b41eb/e/0f21f78a75b64e775cbfc654?renderMode=0&leftPanel=false&uiState=6984566eff47f1cb9f37d8b2">Pièce 2</a></li>
-          </ul>
-
-          <p class="muted" style="margin-top:14px;">
-            Si tu veux, on peut ajouter une branche “Matériel / BOM”, “Code Arduino/ESP”, etc.
-          </p>
-        </div>
-      </aside>
-    </div>
-
-    <!-- MEDIAS -->
-    <section class="card" id="medias" style="margin-top:14px;">
+    <section class="card">
       <div class="hd">
-        <h2>📷 Aperçu médias</h2>
-        <span class="muted">autres_fichiers/</span>
+        <h2>🧠 Carte mentale du projet</h2>
+        <span class="muted">Clique sur les branches</span>
       </div>
+
       <div class="bd">
-        <div class="media-grid">
-          <figure>
-            <img src="autres_fichiers/Croquis.jpg" alt="Croquis">
-            <div class="cap">Croquis</div>
-          </figure>
-          <figure>
-            <img src="autres_fichiers/Programe.png" alt="Programme">
-            <div class="cap">Programme</div>
-          </figure>
-          <figure>
-            <img src="autres_fichiers/Systeme_d_arrosage_FINI.drawio.png" alt="Schéma">
-            <div class="cap">Schéma du système</div>
-          </figure>
-          <figure>
-            <video controls preload="metadata">
-              <source src="autres_fichiers/video.mp4" type="video/mp4">
-              Ton navigateur ne supporte pas la vidéo.
-            </video>
-            <div class="cap">Vidéo de présentation</div>
-          </figure>
+        <div class="map">
+          <!-- LIGNES (version plus propre) -->
+          <svg class="lines" viewBox="0 0 1000 650" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#6fb6ff" stop-opacity=".95"/>
+                <stop offset="1" stop-color="#66e6b3" stop-opacity=".85"/>
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="2" result="b"/>
+                <feMerge>
+                  <feMergeNode in="b"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Centre (500,325) vers noeuds -->
+            <path d="M500 325 C420 250, 300 180, 170 130" stroke="url(#g)" stroke-width="4" fill="none" filter="url(#glow)"/>
+            <path d="M500 325 C420 395, 300 470, 170 505" stroke="url(#g)" stroke-width="4" fill="none" filter="url(#glow)"/>
+            <path d="M500 325 C580 250, 700 190, 830 160" stroke="url(#g)" stroke-width="4" fill="none" filter="url(#glow)"/>
+            <path d="M500 325 C580 395, 700 470, 830 505" stroke="url(#g)" stroke-width="4" fill="none" filter="url(#glow)"/>
+            <path d="M500 325 C500 430, 500 520, 500 590" stroke="url(#g)" stroke-width="4" fill="none" opacity=".70" filter="url(#glow)"/>
+
+            <!-- Petits points aux extrémités -->
+            <g fill="rgba(255,255,255,.80)" opacity=".55">
+              <circle cx="500" cy="325" r="4"/>
+              <circle cx="170" cy="130" r="3.5"/>
+              <circle cx="170" cy="505" r="3.5"/>
+              <circle cx="830" cy="160" r="3.5"/>
+              <circle cx="830" cy="505" r="3.5"/>
+              <circle cx="500" cy="590" r="3.5"/>
+            </g>
+          </svg>
+
+          <!-- CENTRE -->
+          <div class="node center">
+            <div class="t">Projet Arrosage</div>
+            <div class="d">De l’existant → besoin → conception → planning → réalisation.</div>
+            <div class="links">
+              <a class="pill blue" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">📅 Planning</a>
+              <a class="pill green" href="autres_fichiers/video.mp4">▶️ Vidéo</a>
+            </div>
+          </div>
+
+          <!-- Recherche -->
+          <div class="node n-recherche">
+            <div class="t">🔎 Recherche de l’existant</div>
+            <div class="d">Carte mentale / état des lieux.</div>
+            <div class="links">
+              <a class="pill blue" target="_blank" rel="noopener"
+                 href="https://nathanjammes-lab.github.io/Projet_Arosage/carte%20mentale/MVHtmlExport/index.htm">
+                Ouvrir
+              </a>
+            </div>
+          </div>
+
+          <!-- Besoin -->
+          <div class="node n-besoin">
+            <div class="t">🧾 Besoin / analyse</div>
+            <div class="d">Cahier des charges, contraintes.</div>
+            <div class="links">
+              <!-- Mets ici TON vrai lien d'image analyse_besoin si tu l'as -->
+              <a class="pill blue" target="_blank" rel="noopener"
+                 href="REMPLACE_PAR_TON_LIEN_ANALYSE_BESOIN">
+                Voir (image)
+              </a>
+            </div>
+          </div>
+
+          <!-- Onshape -->
+          <div class="node n-onshape">
+            <div class="t">🧩 Conception Onshape</div>
+            <div class="d">Pièces modélisées (liens directs).</div>
+            <div class="links">
+              <a class="pill green" target="_blank" rel="noopener"
+                 href="https://cad.onshape.com/documents/1ebdcbd39435717654714584/w/061c80a41a81f831c6c7d309/e/0c81dac8944d71dc4b8938b5?renderMode=0&uiState=69844dcf7efa5709870f5401">
+                Pièce 1
+              </a>
+              <a class="pill green" target="_blank" rel="noopener"
+                 href="https://cad.onshape.com/documents/1d237ad3dc8cacce2a01fc8e/w/529bf12c2ad7c537813b41eb/e/0f21f78a75b64e775cbfc654?renderMode=0&leftPanel=false&uiState=6984566eff47f1cb9f37d8b2">
+                Pièce 2
+              </a>
+            </div>
+          </div>
+
+          <!-- Planning -->
+          <div class="node n-planning">
+            <div class="t">📅 Planning</div>
+            <div class="d">GanttProject (.gan) + suivi.</div>
+            <div class="links">
+              <a class="pill blue" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">Télécharger .gan</a>
+              <a class="pill blue" target="_blank" rel="noopener"
+                 href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/tree/main/projet_arrossage/planning_ganttproject">
+                Voir dossier
+              </a>
+            </div>
+          </div>
+
+          <!-- Médias -->
+          <div class="node n-medias">
+            <div class="t">📷 Médias</div>
+            <div class="d">Croquis, programme, schéma, vidéo.</div>
+            <div class="links">
+              <a class="pill blue" href="autres_fichiers/Croquis.jpg">Croquis</a>
+              <a class="pill blue" href="autres_fichiers/Programe.png">Programme</a>
+              <a class="pill blue" href="autres_fichiers/Systeme_d_arrosage_FINI.drawio.png">Schéma</a>
+              <a class="pill green" href="autres_fichiers/video.mp4">Vidéo</a>
+            </div>
+          </div>
+
         </div>
 
-        <p class="muted" style="margin-top:12px;">
-          Conseil : évite accents/espaces dans les noms (✅ tu l’as déjà fait) pour des liens propres.
+        <p class="muted" style="margin:12px 0 0;">
+          Note : sur mobile, les traits sont masqués pour garder une mise en page propre.
+          Tu peux remplacer <code>REMPLACE_PAR_TON_LIEN_ANALYSE_BESOIN</code> par ton image (dans le repo ou ailleurs).
         </p>
       </div>
     </section>
