@@ -330,7 +330,7 @@
 
   <script>
     const PAD = 10;
-    const CUT_PAD = 10; // marge autour des cartes “trouées” (reste <= PAD)
+    const CUT_PAD = 10; 
 
     function must(id){
       const el = document.getElementById(id);
@@ -378,7 +378,6 @@
 
       candidates.sort((a,b)=>a.t-b.t);
       const hit = candidates[0] || {x: cx, y: cy};
-
       const len = Math.hypot(dx, dy) || 1;
       const ux = dx/len, uy = dy/len;
 
@@ -388,99 +387,62 @@
     function bezierPath(a, b){
       const dx = b.x - a.x;
       const dy = b.y - a.y;
-
-      if (Math.abs(dx) >= Math.abs(dy)){
-        const bend = Math.min(220, Math.abs(dx) * 0.40);
-        const s = Math.sign(dx) || 1;
-        const c1 = { x: a.x + s*bend, y: a.y };
-        const c2 = { x: b.x - s*bend, y: b.y };
-        return `M ${a.x} ${a.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${b.x} ${b.y}`;
-      } else {
-        const bend = Math.min(210, Math.abs(dy) * 0.40);
-        const s = Math.sign(dy) || 1;
-        const c1 = { x: a.x, y: a.y + s*bend };
-        const c2 = { x: b.x, y: b.y - s*bend };
-        return `M ${a.x} ${a.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${b.x} ${b.y}`;
-      }
+      // Pour les connexions verticales (comme Médias)
+      if (Math.abs(dy) > Math.abs(dx)) {
+        const bend = Math.min(100, Math.abs(dy) * 0.5);
+        return `M ${a.x} ${a.y} C ${a.x} ${a.y + bend/2}, ${b.x} ${b.y - bend/2}, ${b.x} ${b.y}`;
+      } 
+      // Pour les connexions horizontales
+      const bend = Math.min(200, Math.abs(dx) * 0.4);
+      return `M ${a.x} ${a.y} C ${a.x + (dx*0.5)} ${a.y}, ${b.x - (dx*0.5)} ${b.y}, ${b.x} ${b.y}`;
     }
 
     const SVG_NS = "http://www.w3.org/2000/svg";
 
-    // ✅ masque: on “troue” sous les cartes pour éviter que les traits passent dessus
     function ensureCutMask(rootRect){
       const svg = must("lines");
-      const defs = svg.querySelector("defs");
-      let mask = svg.querySelector("#cutNodes");
-      if(!mask){
-        // au cas où (mais dans notre HTML il existe déjà)
-        mask = document.createElementNS(SVG_NS, "mask");
-        mask.setAttribute("id", "cutNodes");
-        mask.setAttribute("maskUnits", "userSpaceOnUse");
-        const bg = document.createElementNS(SVG_NS, "rect");
-        bg.setAttribute("id", "cut-bg");
-        bg.setAttribute("fill", "white");
-        mask.appendChild(bg);
-        defs.appendChild(mask);
-      }
+      const mask = must("cutNodes");
+      const bg = must("cut-bg");
+      
+      bg.setAttribute("width", rootRect.width);
+      bg.setAttribute("height", rootRect.height);
 
-      const bg = mask.querySelector("#cut-bg");
-      bg.setAttribute("x", "0");
-      bg.setAttribute("y", "0");
-      bg.setAttribute("width", String(rootRect.width));
-      bg.setAttribute("height", String(rootRect.height));
-
-      // supprime les anciens “trous”
       mask.querySelectorAll("rect[data-cut]").forEach(r => r.remove());
 
-      const nodeIds = [
-        "node-center",
-        "node-recherche",
-        "node-besoin",
-        "node-onshape",
-        "node-planning",
-        "node-medias"
-      ];
-
+      const nodeIds = ["node-center", "node-recherche", "node-besoin", "node-onshape", "node-planning", "node-medias"];
       for(const id of nodeIds){
         const rr = rectRel(must(id), rootRect);
         const cut = document.createElementNS(SVG_NS, "rect");
         cut.setAttribute("data-cut", id);
-        cut.setAttribute("x", String(rr.left - CUT_PAD));
-        cut.setAttribute("y", String(rr.top - CUT_PAD));
-        cut.setAttribute("width", String(rr.width + 2*CUT_PAD));
-        cut.setAttribute("height", String(rr.height + 2*CUT_PAD));
-        cut.setAttribute("rx", "22");
-        cut.setAttribute("fill", "black"); // noir = “caché”
+        cut.setAttribute("x", rr.left - 5);
+        cut.setAttribute("y", rr.top - 5);
+        cut.setAttribute("width", rr.width + 10);
+        cut.setAttribute("height", rr.height + 10);
+        cut.setAttribute("rx", "20");
+        cut.setAttribute("fill", "black");
         mask.appendChild(cut);
       }
     }
 
-    // ✅ crée path/circle si manquants
     function ensureSvgFor(id){
       const svg = must("lines");
-
       let p = document.getElementById(`p-${id}`);
       if(!p){
         p = document.createElementNS(SVG_NS,"path");
         p.setAttribute("id", `p-${id}`);
         p.setAttribute("stroke", "url(#g)");
-        p.setAttribute("stroke-width", id === "medias" ? "6.2" : "4.8"); /* un poil plus épais */
+        p.setAttribute("stroke-width", "5");
         p.setAttribute("fill", "none");
         p.setAttribute("filter", "url(#glow)");
-        p.setAttribute("stroke-linecap", "round");
-        p.setAttribute("stroke-opacity", "1");
-        p.setAttribute("mask", "url(#cutNodes)"); /* ✅ ne passe pas sur les cartes */
+        p.setAttribute("mask", "url(#cutNodes)");
         svg.appendChild(p);
       }
-
       let c = document.getElementById(`c-${id}`);
       if(!c){
         c = document.createElementNS(SVG_NS,"circle");
         c.setAttribute("id", `c-${id}`);
-        c.setAttribute("r", "4.6");
-        c.setAttribute("fill", "#ffffff");
-        c.setAttribute("opacity", ".92");
-        c.setAttribute("filter", "url(#glow)");
+        c.setAttribute("r", "5");
+        c.setAttribute("fill", "#66e6b3");
         c.setAttribute("mask", "url(#cutNodes)");
         svg.appendChild(c);
       }
@@ -493,34 +455,28 @@
       const root = map.getBoundingClientRect();
 
       svg.setAttribute('viewBox', `0 0 ${root.width} ${root.height}`);
-      svg.setAttribute('width', root.width);
-      svg.setAttribute('height', root.height);
-
-      // ✅ met à jour le masque à CHAQUE layout
       ensureCutMask(root);
 
       const cRect = rectRel(must('node-center'), root);
-
       const targets = [
         { id:'recherche', node: must('node-recherche') },
-        { id:'besoin',   node: must('node-besoin') },
-        { id:'onshape',  node: must('node-onshape') },
-        { id:'planning', node: must('node-planning') },
-        { id:'medias',   node: must('node-medias') },
+        { id:'besoin',    node: must('node-besoin') },
+        { id:'onshape',   node: must('node-onshape') },
+        { id:'planning',  node: must('node-planning') },
+        { id:'medias',    node: must('node-medias') }
       ];
 
       for(const t of targets){
         const tRect = rectRel(t.node, root);
-
         let start, end;
 
-        // ✅ branche Médias : bas-centre -> haut-centre (garantie visible)
-        if (t.id === 'medias') {
-          start = { x: cRect.cx, y: cRect.bottom + PAD };
-          end   = { x: tRect.cx, y: tRect.top - PAD };
+        // Force la connexion verticale pour Médias
+        if(t.id === 'medias') {
+          start = { x: cRect.cx, y: cRect.bottom + 2 };
+          end = { x: tRect.cx, y: tRect.top - 2 };
         } else {
           start = edgePoint(cRect, tRect.cx, tRect.cy);
-          end   = edgePoint(tRect, cRect.cx, cRect.cy);
+          end = edgePoint(tRect, cRect.cx, cRect.cy);
         }
 
         const {p,c} = ensureSvgFor(t.id);
@@ -530,20 +486,14 @@
       }
     }
 
-    // ✅ plusieurs frames: évite le "calcul trop tôt" (fonts / layout)
     function stabilize(){
-      let n = 0;
-      const tick = () => {
-        try { layoutLines(); } catch(e){ console.error(e); }
-        if(n++ < 18) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-      setTimeout(()=>{ try{layoutLines();}catch(e){console.error(e);} }, 200);
-      setTimeout(()=>{ try{layoutLines();}catch(e){console.error(e);} }, 600);
+      layoutLines();
+      requestAnimationFrame(layoutLines);
+      setTimeout(layoutLines, 500);
     }
 
     window.addEventListener('load', stabilize);
-    window.addEventListener('resize', stabilize);
-  </script>
+    window.addEventListener('resize', layoutLines);
+</script>
 </body>
 </html>
