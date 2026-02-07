@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Projet Arrosage — Nathan & Léo</title>
 
+  <!-- ✅ évite le 404 favicon.ico -->
   <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23072a55'/%3E%3Cpath d='M32 10s14 16 14 28a14 14 0 1 1-28 0c0-12 14-28 14-28z' fill='%236fb6ff'/%3E%3Ccircle cx='24' cy='42' r='3' fill='white' fill-opacity='.8'/%3E%3C/svg%3E" />
 
@@ -20,9 +21,12 @@
     }
 
     *{box-sizing:border-box;}
-    html,body{height:100%; margin:0; overflow:hidden;}
+    html,body{height:100%;}
 
     body{
+      margin:0;
+      height:100vh;
+      overflow:hidden;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--txt);
       background:
@@ -32,67 +36,175 @@
         linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
     }
 
-    /* Gouttes en arrière-plan */
+    /* petites gouttes */
     body::before{
-      content:""; position:fixed; inset:0; pointer-events:none; opacity:.20;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 520 520'%3E%3Cg fill='white' fill-opacity='.55'%3E%3Cpath d='M70 92c0-14 15-28 15-28s15 14 15 28c0 10-7 19-15 19s-15-9-15-19z'/%3E%3Cpath d='M168 160c0-12 13-24 13-24s13 12 13 24c0 9-6 16-13 16s-13-7-13-16z'/%3E%3Cpath d='M340 110c0-15 16-30 16-30s16 15 16 30c0 11-7 20-16 20s-16-9-16-20z'/%3E%3Cpath d='M448 210c0-12 13-24 13-24s13 12 13 24c0 9-6 16-13 16s-13-7-13-16z'/%3E%3Cpath d='M110 360c0-12 13-24 13-24s13 12 13 24c0 9-6 16-13 16s-13-7-13-16z'/%3E%3C/g%3E%3C/svg%3E");
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      opacity:.28;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 520 520'%3E%3Cg fill='white' fill-opacity='.55'%3E%3Cpath d='M70 92c0-14 15-28 15-28s15 14 15 28c0 10-7 19-15 19s-15-9-15-19z'/%3E%3Cpath d='M168 160c0-12 13-24 13-24s13 12 13 24c0 9-6 16-13 16s-13-7-13-16z'/%3E%3Cpath d='M340 110c0-15 16-30 16-30s16 15 16 30c0 11-7 20-16 20s-16-9-16-20z'/%3E%3Cpath d='M448 210c0-12 13-24 13-24s13 12 13 24c0 9-6 16-13 16s-13-7-13-16z'/%3E%3Cpath d='M110 360c0-12 13-24 13-24s13 12 13 24c0 9-6 16-13 16s-13-7-13-16z'/%3E%3Cpath d='M250 430c0-14 15-28 15-28s15 14 15 28c0 10-7 19-15 19s-15-9-15-19z'/%3E%3Cpath d='M410 390c0-12 13-24 13-24s13 12 13 24c0 9-6 16-13 16s-13-7-13-16z'/%3E%3C/g%3E%3C/svg%3E");
       background-size: 240px 240px;
+      filter: blur(.22px);
+    }
+
+    /* tuyaux + goutteurs + gouttes */
+    body::after{
+      content:"";
+      position:fixed; inset:-30px;
+      pointer-events:none;
+      opacity:.26;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='900' viewBox='0 0 1400 900'%3E%3Cdefs%3E%3ClinearGradient id='p' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff' stop-opacity='.55'/%3E%3Cstop offset='1' stop-color='%236fb6ff' stop-opacity='.35'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23p)' stroke-linecap='round'%3E%3Cpath d='M-40 160 C 180 50, 360 70, 540 170 S 880 300, 1060 190 S 1260 40, 1460 150' stroke-width='18'/%3E%3Cpath d='M-60 760 C 200 610, 420 650, 620 780 S 920 940, 1160 770 S 1340 620, 1460 720' stroke-width='16' stroke-opacity='.75'/%3E%3Cpath d='M240 -60 C 280 120, 280 220, 220 340 S 120 600, 220 740 S 320 980, 260 940' stroke-width='14' stroke-opacity='.55'/%3E%3Cpath d='M1180 -60 C 1120 120, 1120 220, 1200 340 S 1320 620, 1200 760 S 1080 980, 1140 940' stroke-width='14' stroke-opacity='.55'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='.55'%3E%3Ccircle cx='320' cy='128' r='6'/%3E%3Ccircle cx='520' cy='170' r='6'/%3E%3Ccircle cx='760' cy='240' r='6'/%3E%3Ccircle cx='980' cy='210' r='6'/%3E%3Ccircle cx='440' cy='730' r='6'/%3E%3Ccircle cx='700' cy='812' r='6'/%3E%3Ccircle cx='980' cy='820' r='6'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='.35'%3E%3Cpath d='M330 150c0-7 7-14 7-14s7 7 7 14c0 5-3 9-7 9s-7-4-7-9z'/%3E%3Cpath d='M530 195c0-7 7-14 7-14s7 7 7 14c0 5-3 9-7 9s-7-4-7-9z'/%3E%3Cpath d='M770 265c0-7 7-14 7-14s7 7 7 14c0 5-3 9-7 9s-7-4-7-9z'/%3E%3Cpath d='M990 235c0-7 7-14 7-14s7 7 7 14c0 5-3 9-7 9s-7-4-7-9z'/%3E%3Cpath d='M450 756c0-7 7-14 7-14s7 7 7 14c0 5-3 9-7 9s-7-4-7-9z'/%3E%3Cpath d='M710 840c0-7 7-14 7-14s7 7 7 14c0 5-3 9-7 9s-7-4-7-9z'/%3E%3Cpath d='M990 848c0-7 7-14 7-14s7 7 7 14c0 5-3 9-7 9s-7-4-7-9z'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+      filter: blur(.35px);
     }
 
     .page{height:100vh; display:flex; flex-direction:column;}
 
     header{
-      backdrop-filter: blur(10px); background: rgba(0,0,0,.26);
-      border-bottom: 1px solid rgba(255,255,255,.14); padding: 12px 18px; text-align:center;
+      flex:0 0 auto;
+      backdrop-filter: blur(10px);
+      background: rgba(0,0,0,.26);
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      padding: 12px 18px;
+      text-align:center;
     }
-    .titleTop{ margin:0; font-weight:1000; font-size: clamp(28px, 5vw, 48px); text-shadow: 0 10px 26px rgba(0,0,0,.40); }
-    .subTop{margin:4px 0 0; color:var(--muted); font-size:14px;}
+    .titleTop{
+      margin:0;
+      font-weight:1000;
+      letter-spacing:.3px;
+      font-size: clamp(28px, 5vw, 52px);
+      line-height:1.05;
+      text-shadow: 0 10px 26px rgba(0,0,0,.40);
+    }
+    .subTop{margin:6px 0 0; color:var(--muted); font-size:14px;}
 
-    main{ flex:1; padding: 15px; display:flex; justify-content:center; align-items:stretch; overflow:hidden; }
+    main{
+      flex:1 1 auto;
+      overflow:hidden;
+      padding: 12px 18px 18px;
+      display:flex;
+      justify-content:center;
+      align-items:stretch;
+    }
 
     .card{
-      width:min(1200px, 100%); border:1px solid rgba(255,255,255,.22);
-      border-radius: var(--r); background: rgba(255,255,255,.12);
-      box-shadow: var(--shadow); overflow:hidden; display:flex; flex-direction:column; backdrop-filter: blur(12px);
+      width:min(1200px, 100%);
+      height:100%;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius: var(--r);
+      background: rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      backdrop-filter: blur(10px);
     }
-    .card .hd{ padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.16); display:flex; justify-content:space-between; align-items:center; background: rgba(0,0,0,.15); }
+    .card .hd{
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.16);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background: rgba(0,0,0,.12);
+    }
     .card h2{margin:0; font-size:16px;}
-    .card .bd{flex:1; position:relative; overflow:hidden; padding: 10px;}
+    .muted{color:var(--muted);}
+    .card .bd{flex:1 1 auto; padding: 12px 14px; overflow:hidden;}
 
-    .map{ position:relative; height:100%; border-radius: 15px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); overflow:hidden; }
+    .map{
+      position:relative;
+      height:100%;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.18);
+    }
 
-    .lines{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:1; }
+    /* ✅ IMPORTANT : le SVG au-dessus des cartes (sinon la grosse ombre du centre “mange” la branche Médias) */
+    .lines{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      pointer-events:none;
+      opacity:1;
+      z-index:6;
+    }
 
     .node{
-      position:absolute; width:260px; padding:14px; border-radius:20px;
-      border:1px solid rgba(255,255,255,.25); background: rgba(10, 25, 45, 0.65);
-      box-shadow: var(--shadow2); backdrop-filter: blur(10px); z-index:2;
+      position:absolute;
+      width:255px;
+      padding:12px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.26);
+      background: rgba(0,0,0,.30);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(8px);
+      z-index:2;
     }
-    .node .t{font-weight:1000; margin-bottom:6px; font-size: 15px;}
-    .node .d{font-size:12.5px; color:var(--muted); margin-bottom:12px; line-height: 1.3;}
+    .node .t{font-weight:1000; margin-bottom:6px;}
+    .node .d{font-size:13px; color:var(--muted); margin-bottom:10px;}
     .node .links{display:flex; flex-wrap:wrap; gap:8px;}
 
     .pill{
-      display:inline-flex; align-items:center; padding:7px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.06);
-      text-decoration:none; font-size:12px; color: var(--txt); transition: 0.2s;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.24);
+      background: rgba(255,255,255,.08);
+      text-decoration:none;
+      font-size:13px;
+      white-space:nowrap;
+      color: var(--txt);
     }
-    .pill:hover{ background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); }
-    .pill.blue{border-color: var(--accent);}
-    .pill.green{border-color: var(--accent2);}
+    .pill:hover{background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.32);}
+    .pill.blue{border-color: rgba(111,182,255,.70);}
+    .pill.green{border-color: rgba(102,230,179,.65);}
 
-    .center{ left:50%; top:50%; transform: translate(-50%, -50%); width:360px; background: linear-gradient(180deg, rgba(111,182,255,.15), rgba(0,0,0,.5)); border-color: rgba(111,182,255,0.4); }
-    .center .t{ font-size: 19px; }
+    .center{
+      left:50%; top:50%;
+      transform: translate(-50%, -50%);
+      width:390px;
+      padding:16px;
+      background: linear-gradient(180deg, rgba(111,182,255,.28), rgba(0,0,0,.30));
+      border-color: rgba(111,182,255,.55);
+    }
+    .center .t{font-size:20px;}
+    .center .d{font-size:14px;}
 
-    /* Positions des cartes */
-    .n-recherche{ left:4%;  top:8%; }
-    .n-onshape  { right:4%; top:8%; }
+    .n-recherche{ left:4%;  top:7%; }
+    .n-onshape  { right:4%; top:9%; }
     .n-besoin   { left:4%;  top:56%; }
     .n-planning { right:4%; top:56%; }
-    .n-medias   { left:50%; top:86%; transform: translateX(-50%); width:400px; }
 
-    .fab{ position: fixed; right: 20px; bottom: 20px; display:flex; gap:12px; z-index: 100; }
-    .fab a{ padding: 10px 18px; border-radius: 999px; border:1px solid rgba(255,255,255,.2); background: rgba(0,0,0,0.6); color: #fff; text-decoration:none; font-size:13px; font-weight:700; backdrop-filter: blur(8px); }
+    .n-medias   { left:50%; top:90%; transform: translate(-50%, -50%); width:390px; }
+
+    .fab{
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      display:flex;
+      gap:10px;
+      z-index: 20;
+    }
+    .fab a{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.32);
+      backdrop-filter: blur(10px);
+      text-decoration:none;
+      color: var(--txt);
+      box-shadow: 0 12px 28px rgba(0,0,0,.30);
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .fab .zip{border-color: rgba(111,182,255,.60);}
+    .fab .repo{border-color: rgba(102,230,179,.60);}
   </style>
 </head>
 
@@ -107,17 +219,31 @@
       <section class="card">
         <div class="hd">
           <h2>🧠 Carte mentale</h2>
-          <span style="opacity:0.6; font-size:12px;">Cliquez sur les éléments</span>
+          <span class="muted">Clique sur les branches</span>
         </div>
+
         <div class="bd">
           <div class="map" id="map">
-            <svg class="lines" id="lines">
+
+            <svg class="lines" id="lines" aria-hidden="true" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#6fb6ff"/><stop offset="1" stop-color="#66e6b3"/>
+                  <stop offset="0" stop-color="#6fb6ff" stop-opacity=".98"/>
+                  <stop offset="1" stop-color="#66e6b3" stop-opacity=".90"/>
                 </linearGradient>
-                <filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                <mask id="cutNodes" maskUnits="userSpaceOnUse"><rect id="cut-bg" fill="white"/></mask>
+
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="2.2" result="b"/>
+                  <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+
+                <!-- ✅ Masque: on affiche tout en blanc, puis on “découpe” des trous noirs sous les cartes -->
+                <mask id="cutNodes" maskUnits="userSpaceOnUse">
+                  <rect id="cut-bg" x="0" y="0" width="1" height="1" fill="white"></rect>
+                </mask>
               </defs>
             </svg>
 
@@ -127,19 +253,13 @@
             </div>
 
             <div class="node n-recherche" id="node-recherche">
-              <div class="t">🔎 Recherche de l'existant</div>
+              <div class="t">🔎 Recherche de l’existant</div>
               <div class="d">Carte mentale / état des lieux.</div>
               <div class="links">
-                <a class="pill blue" target="_blank" href="https://nathanjammes-lab.github.io/Projet_Arosage/carte%20mentale/MVHtmlExport/index.htm">Ouvrir</a>
-              </div>
-            </div>
-
-            <div class="node n-onshape" id="node-onshape">
-              <div class="t">🧩 Conception Onshape</div>
-              <div class="d">Pièces modélisées (liens directs).</div>
-              <div class="links">
-                <a class="pill green" target="_blank" href="https://cad.onshape.com/documents/1ebdcbd39435717654714584/w/061c80a41a81f831c6c7d309/e/0c81dac8944d71dc4b8938b5">Pièce 1</a>
-                <a class="pill green" target="_blank" href="https://cad.onshape.com/documents/1d237ad3dc8cacce2a01fc8e/w/529bf12c2ad7c537813b41eb/e/0f21f78a75b64e775cbfc654">Pièce 2</a>
+                <a class="pill blue" target="_blank" rel="noopener"
+                   href="https://nathanjammes-lab.github.io/Projet_Arosage/carte%20mentale/MVHtmlExport/index.htm">
+                  Ouvrir
+                </a>
               </div>
             </div>
 
@@ -147,7 +267,25 @@
               <div class="t">🧾 Besoin / analyse</div>
               <div class="d">Cahier des charges, contraintes.</div>
               <div class="links">
-                <a class="pill blue" target="_blank" href="https://raw.githubusercontent.com/nathanjammes-lab/Projet_Arosage/refs/heads/main/analyse_besoin/analyse_besoin.jpg">Voir (image)</a>
+                <a class="pill blue" target="_blank" rel="noopener"
+                   href="https://raw.githubusercontent.com/nathanjammes-lab/Projet_Arosage/refs/heads/main/analyse_besoin/analyse_besoin.jpg">
+                  Voir (image)
+                </a>
+              </div>
+            </div>
+
+            <div class="node n-onshape" id="node-onshape">
+              <div class="t">🧩 Conception Onshape</div>
+              <div class="d">Pièces modélisées (liens directs).</div>
+              <div class="links">
+                <a class="pill green" target="_blank" rel="noopener"
+                   href="https://cad.onshape.com/documents/1ebdcbd39435717654714584/w/061c80a41a81f831c6c7d309/e/0c81dac8944d71dc4b8938b5?renderMode=0&uiState=69844dcf7efa5709870f5401">
+                  Pièce 1
+                </a>
+                <a class="pill green" target="_blank" rel="noopener"
+                   href="https://cad.onshape.com/documents/1d237ad3dc8cacce2a01fc8e/w/529bf12c2ad7c537813b41eb/e/0f21f78a75b64e775cbfc654?renderMode=0&leftPanel=false&uiState=6984566eff47f1cb9f37d8b2">
+                  Pièce 2
+                </a>
               </div>
             </div>
 
@@ -155,8 +293,11 @@
               <div class="t">📅 Planning</div>
               <div class="d">GanttProject (.gan) + suivi.</div>
               <div class="links">
-                <a class="pill blue" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">Télécharger</a>
-                <a class="pill blue" target="_blank" href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/tree/main/projet_arrossage/planning_ganttproject">Dossier</a>
+                <a class="pill blue" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">Télécharger .gan</a>
+                <a class="pill blue" target="_blank" rel="noopener"
+                   href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/tree/main/projet_arrossage/planning_ganttproject">
+                  Voir dossier
+                </a>
               </div>
             </div>
 
@@ -177,79 +318,217 @@
     </main>
 
     <div class="fab">
-      <a href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo" target="_blank" style="border-color:#66e6b3">↗ GitHub</a>
-      <a href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/archive/refs/heads/main.zip" style="border-color:#6fb6ff">⬇ ZIP</a>
+      <a class="repo" href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo" target="_blank" rel="noopener">↗ Dépôt GitHub</a>
+      <a class="zip"  href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/archive/refs/heads/main.zip" target="_blank" rel="noopener">⬇ ZIP</a>
     </div>
   </div>
 
   <script>
-    function must(id){ return document.getElementById(id); }
+    // ✅ réglages “anti-coupe” : le trait démarre/arrive plus loin que le masque
+    const PAD = 10;       // branches normales
+    const CUT_PAD = 6;    // ✅ trou du masque plus petit (évite de manger le trait)
+    const SAFE_GAP = 28;  // ✅ éloigne le trait des cartes (épaisseur + glow)
+
+    function must(id){
+      const el = document.getElementById(id);
+      if(!el) throw new Error("Élément manquant: " + id);
+      return el;
+    }
 
     function rectRel(el, rootRect){
       const r = el.getBoundingClientRect();
       return {
-        left: r.left - rootRect.left, top: r.top - rootRect.top,
-        right: r.right - rootRect.left, bottom: r.bottom - rootRect.top,
-        width: r.width, height: r.height,
-        cx: (r.left - rootRect.left) + r.width/2, cy: (r.top - rootRect.top) + r.height/2
+        left: r.left - rootRect.left,
+        top: r.top - rootRect.top,
+        right: r.right - rootRect.left,
+        bottom: r.bottom - rootRect.top,
+        width: r.width,
+        height: r.height,
+        cx: (r.left - rootRect.left) + r.width/2,
+        cy: (r.top - rootRect.top) + r.height/2
       };
     }
 
-    function bezierPath(a, b, isVertical){
-      if(isVertical){
-        const midY = a.y + (b.y - a.y) * 0.4;
-        return `M ${a.x} ${a.y} C ${a.x} ${midY}, ${b.x} ${a.y + (b.y-a.y)*0.6}, ${b.x} ${b.y}`;
+    function edgePoint(rect, tx, ty){
+      const cx = rect.cx, cy = rect.cy;
+      const dx = tx - cx, dy = ty - cy;
+      const EPS = 1e-6;
+      const candidates = [];
+
+      if (Math.abs(dx) > EPS){
+        let t = (rect.left - cx) / dx;
+        let y = cy + t*dy;
+        if (t > 0 && y >= rect.top && y <= rect.bottom) candidates.push({t, x: rect.left, y});
+        t = (rect.right - cx) / dx;
+        y = cy + t*dy;
+        if (t > 0 && y >= rect.top && y <= rect.bottom) candidates.push({t, x: rect.right, y});
       }
-      const midX = a.x + (b.x - a.x) * 0.5;
-      return `M ${a.x} ${a.y} C ${midX} ${a.y}, ${midX} ${b.y}, ${b.x} ${b.y}`;
+
+      if (Math.abs(dy) > EPS){
+        let t = (rect.top - cy) / dy;
+        let x = cx + t*dx;
+        if (t > 0 && x >= rect.left && x <= rect.right) candidates.push({t, x, y: rect.top});
+        t = (rect.bottom - cy) / dy;
+        x = cx + t*dx;
+        if (t > 0 && x >= rect.left && x <= rect.right) candidates.push({t, x, y: rect.bottom});
+      }
+
+      candidates.sort((a,b)=>a.t-b.t);
+      const hit = candidates[0] || {x: cx, y: cy};
+
+      const len = Math.hypot(dx, dy) || 1;
+      const ux = dx/len, uy = dy/len;
+
+      return { x: hit.x + ux*PAD, y: hit.y + uy*PAD };
+    }
+
+    function bezierPath(a, b){
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+
+      if (Math.abs(dx) >= Math.abs(dy)){
+        const bend = Math.min(220, Math.abs(dx) * 0.40);
+        const s = Math.sign(dx) || 1;
+        const c1 = { x: a.x + s*bend, y: a.y };
+        const c2 = { x: b.x - s*bend, y: b.y };
+        return `M ${a.x} ${a.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${b.x} ${b.y}`;
+      } else {
+        const bend = Math.min(210, Math.abs(dy) * 0.40);
+        const s = Math.sign(dy) || 1;
+        const c1 = { x: a.x, y: a.y + s*bend };
+        const c2 = { x: b.x, y: b.y - s*bend };
+        return `M ${a.x} ${a.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${b.x} ${b.y}`;
+      }
+    }
+
+    const SVG_NS = "http://www.w3.org/2000/svg";
+
+    // ✅ masque: on “troue” sous les cartes pour éviter que les traits passent dessus
+    function ensureCutMask(rootRect){
+      const svg = must("lines");
+      const mask = svg.querySelector("#cutNodes");
+
+      const bg = mask.querySelector("#cut-bg");
+      bg.setAttribute("x", "0");
+      bg.setAttribute("y", "0");
+      bg.setAttribute("width", String(rootRect.width));
+      bg.setAttribute("height", String(rootRect.height));
+
+      // supprime les anciens “trous”
+      mask.querySelectorAll("rect[data-cut]").forEach(r => r.remove());
+
+      const nodeIds = [
+        "node-center",
+        "node-recherche",
+        "node-besoin",
+        "node-onshape",
+        "node-planning",
+        "node-medias"
+      ];
+
+      for(const id of nodeIds){
+        const rr = rectRel(must(id), rootRect);
+        const cut = document.createElementNS(SVG_NS, "rect");
+        cut.setAttribute("data-cut", id);
+        cut.setAttribute("x", String(rr.left - CUT_PAD));
+        cut.setAttribute("y", String(rr.top - CUT_PAD));
+        cut.setAttribute("width", String(rr.width + 2*CUT_PAD));
+        cut.setAttribute("height", String(rr.height + 2*CUT_PAD));
+        cut.setAttribute("rx", "22");
+        cut.setAttribute("fill", "black"); // noir = “caché”
+        mask.appendChild(cut);
+      }
+    }
+
+    // ✅ crée path/circle si manquants
+    function ensureSvgFor(id){
+      const svg = must("lines");
+
+      let p = document.getElementById(`p-${id}`);
+      if(!p){
+        p = document.createElementNS(SVG_NS,"path");
+        p.setAttribute("id", `p-${id}`);
+        p.setAttribute("stroke", "url(#g)");
+        p.setAttribute("stroke-width", id === "medias" ? "6.2" : "4.8");
+        p.setAttribute("fill", "none");
+        p.setAttribute("filter", "url(#glow)");
+        p.setAttribute("stroke-linecap", "round");
+        p.setAttribute("stroke-opacity", "1");
+        p.setAttribute("mask", "url(#cutNodes)"); /* ✅ ne passe pas sur les cartes */
+        svg.appendChild(p);
+      }
+
+      let c = document.getElementById(`c-${id}`);
+      if(!c){
+        c = document.createElementNS(SVG_NS,"circle");
+        c.setAttribute("id", `c-${id}`);
+        c.setAttribute("r", "4.6");
+        c.setAttribute("fill", "#ffffff");
+        c.setAttribute("opacity", ".92");
+        c.setAttribute("filter", "url(#glow)");
+        /* ✅ IMPORTANT : on NE masque PAS le point (évite qu’il soit coupé) */
+        svg.appendChild(c);
+      }
+      return {p,c};
     }
 
     function layoutLines(){
       const map = must('map');
       const svg = must('lines');
       const root = map.getBoundingClientRect();
-      
+
+      svg.setAttribute('viewBox', `0 0 ${root.width} ${root.height}`);
       svg.setAttribute('width', root.width);
       svg.setAttribute('height', root.height);
-      must('cut-bg').setAttribute('width', root.width);
-      must('cut-bg').setAttribute('height', root.height);
+
+      // ✅ met à jour le masque à CHAQUE layout
+      ensureCutMask(root);
 
       const cRect = rectRel(must('node-center'), root);
-      const targets = ['recherche', 'besoin', 'onshape', 'planning', 'medias'];
 
-      targets.forEach(id => {
-        const tNode = must('node-' + id);
-        const tRect = rectRel(tNode, root);
+      const targets = [
+        { id:'recherche', node: must('node-recherche') },
+        { id:'besoin',   node: must('node-besoin') },
+        { id:'onshape',  node: must('node-onshape') },
+        { id:'planning', node: must('node-planning') },
+        { id:'medias',   node: must('node-medias') },
+      ];
+
+      for(const t of targets){
+        const tRect = rectRel(t.node, root);
+
         let start, end;
 
-        if(id === 'medias'){
-          start = { x: cRect.cx, y: cRect.bottom + 5 };
-          end = { x: tRect.cx, y: tRect.top - 5 };
+        // ✅ branche Médias : sort “loin” des cartes pour ne pas être coupée par le masque
+        if (t.id === 'medias') {
+          start = { x: cRect.cx, y: cRect.bottom + SAFE_GAP };
+          end   = { x: tRect.cx, y: tRect.top - SAFE_GAP };
         } else {
-          start = { x: (tRect.cx < cRect.cx ? cRect.left - 5 : cRect.right + 5), y: cRect.cy };
-          end = { x: (tRect.cx < cRect.cx ? tRect.right + 5 : tRect.left - 5), y: tRect.cy };
+          start = edgePoint(cRect, tRect.cx, tRect.cy);
+          end   = edgePoint(tRect, cRect.cx, cRect.cy);
         }
 
-        let p = must('p-' + id);
-        if(!p){
-          p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          p.id = 'p-' + id;
-          p.setAttribute('stroke', 'url(#g)');
-          p.setAttribute('stroke-width', '4.5');
-          p.setAttribute('fill', 'none');
-          p.setAttribute('filter', 'url(#glow)');
-          p.setAttribute('mask', 'url(#cutNodes)');
-          svg.appendChild(p);
-        }
-        p.setAttribute('d', bezierPath(start, end, id === 'medias'));
-      });
+        const {p,c} = ensureSvgFor(t.id);
+        p.setAttribute('d', bezierPath(start, end));
+        c.setAttribute('cx', end.x);
+        c.setAttribute('cy', end.y);
+      }
     }
 
-    window.addEventListener('load', () => { 
-      layoutLines(); 
-      setTimeout(layoutLines, 200); // Recalcul après rendu final
-    });
-    window.addEventListener('resize', layoutLines);
+    // ✅ plusieurs frames: évite le "calcul trop tôt" (fonts / layout)
+    function stabilize(){
+      let n = 0;
+      const tick = () => {
+        try { layoutLines(); } catch(e){ console.error(e); }
+        if(n++ < 18) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      setTimeout(()=>{ try{layoutLines();}catch(e){console.error(e);} }, 200);
+      setTimeout(()=>{ try{layoutLines();}catch(e){console.error(e);} }, 600);
+    }
+
+    window.addEventListener('load', stabilize);
+    window.addEventListener('resize', stabilize);
   </script>
 </body>
 </html>
