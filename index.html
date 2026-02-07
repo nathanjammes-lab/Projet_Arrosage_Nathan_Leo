@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Projet Arrosage — Nathan & Léo</title>
 
+  <!-- ✅ évite le 404 favicon.ico -->
+  <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs/%3E%3Crect width='64' height='64' rx='14' fill='%23072a55'/%3E%3Cpath d='M32 10s14 16 14 28a14 14 0 1 1-28 0c0-12 14-28 14-28z' fill='%236fb6ff'/%3E%3Ccircle cx='24' cy='42' r='3' fill='white' fill-opacity='.8'/%3E%3C/svg%3E" />
+
   <style>
     :root{
       --bg1:#041325; --bg2:#072a55; --bg3:#0b4f86;
@@ -15,7 +19,6 @@
       --shadow2: 0 14px 34px rgba(0,0,0,.36);
       --r: 20px;
     }
-
     *{box-sizing:border-box;}
     html,body{height:100%;}
 
@@ -56,7 +59,6 @@
     }
 
     .page{height:100vh; display:flex; flex-direction:column;}
-
     header{
       flex:0 0 auto;
       backdrop-filter: blur(10px);
@@ -88,7 +90,7 @@
       width:min(1200px, 100%);
       height:100%;
       border:1px solid rgba(255,255,255,.22);
-      border-radius: var(--r);
+      border-radius: 20px;
       background: rgba(255,255,255,.14);
       box-shadow: var(--shadow);
       overflow:hidden;
@@ -121,7 +123,7 @@
       position:absolute; inset:0;
       width:100%; height:100%;
       pointer-events:none;
-      opacity:.98;
+      opacity:1;
       z-index:1;
     }
 
@@ -219,7 +221,7 @@
         <div class="bd">
           <div class="map" id="map">
 
-            <svg class="lines" id="lines" aria-hidden="true">
+            <svg class="lines" id="lines" aria-hidden="true" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0" stop-color="#6fb6ff" stop-opacity=".98"/>
@@ -234,17 +236,7 @@
                 </filter>
               </defs>
 
-              <path id="p-recherche" stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
-              <path id="p-besoin"   stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
-              <path id="p-onshape"  stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
-              <path id="p-planning" stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
-              <path id="p-medias"   stroke="url(#g)" stroke-width="4.6" fill="none" filter="url(#glow)"/>
-
-              <circle id="c-recherche" r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
-              <circle id="c-besoin"   r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
-              <circle id="c-onshape"  r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
-              <circle id="c-planning" r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
-              <circle id="c-medias"   r="3.8" fill="rgba(255,255,255,.85)" opacity=".50"/>
+              <!-- on laisse le SVG vide: le JS créera/assurera tous les paths/circles -->
             </svg>
 
             <!-- carte centrale : pas de boutons -->
@@ -258,7 +250,7 @@
               <div class="d">Carte mentale / état des lieux.</div>
               <div class="links">
                 <a class="pill blue" target="_blank" rel="noopener"
-                  href="https://nathanjammes-lab.github.io/Projet_Arosage/carte%20mentale/MVHtmlExport/index.htm">
+                   href="https://nathanjammes-lab.github.io/Projet_Arosage/carte%20mentale/MVHtmlExport/index.htm">
                   Ouvrir
                 </a>
               </div>
@@ -269,7 +261,7 @@
               <div class="d">Cahier des charges, contraintes.</div>
               <div class="links">
                 <a class="pill blue" target="_blank" rel="noopener"
-                  href="https://raw.githubusercontent.com/nathanjammes-lab/Projet_Arosage/refs/heads/main/analyse_besoin/analyse_besoin.jpg">
+                   href="https://raw.githubusercontent.com/nathanjammes-lab/Projet_Arosage/refs/heads/main/analyse_besoin/analyse_besoin.jpg">
                   Voir (image)
                 </a>
               </div>
@@ -280,11 +272,11 @@
               <div class="d">Pièces modélisées (liens directs).</div>
               <div class="links">
                 <a class="pill green" target="_blank" rel="noopener"
-                  href="https://cad.onshape.com/documents/1ebdcbd39435717654714584/w/061c80a41a81f831c6c7d309/e/0c81dac8944d71dc4b8938b5?renderMode=0&uiState=69844dcf7efa5709870f5401">
+                   href="https://cad.onshape.com/documents/1ebdcbd39435717654714584/w/061c80a41a81f831c6c7d309/e/0c81dac8944d71dc4b8938b5?renderMode=0&uiState=69844dcf7efa5709870f5401">
                   Pièce 1
                 </a>
                 <a class="pill green" target="_blank" rel="noopener"
-                  href="https://cad.onshape.com/documents/1d237ad3dc8cacce2a01fc8e/w/529bf12c2ad7c537813b41eb/e/0f21f78a75b64e775cbfc654?renderMode=0&leftPanel=false&uiState=6984566eff47f1cb9f37d8b2">
+                   href="https://cad.onshape.com/documents/1d237ad3dc8cacce2a01fc8e/w/529bf12c2ad7c537813b41eb/e/0f21f78a75b64e775cbfc654?renderMode=0&leftPanel=false&uiState=6984566eff47f1cb9f37d8b2">
                   Pièce 2
                 </a>
               </div>
@@ -296,7 +288,7 @@
               <div class="links">
                 <a class="pill blue" href="projet_arrossage/planning_ganttproject/projet_arrossage.gan">Télécharger .gan</a>
                 <a class="pill blue" target="_blank" rel="noopener"
-                  href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/tree/main/projet_arrossage/planning_ganttproject">
+                   href="https://github.com/nathanjammes-lab/Projet_Arrosage_Nathan_Leo/tree/main/projet_arrossage/planning_ganttproject">
                   Voir dossier
                 </a>
               </div>
@@ -329,7 +321,7 @@
 
     function must(id){
       const el = document.getElementById(id);
-      if(!el) console.error("Élément manquant:", id);
+      if(!el) throw new Error("Élément manquant: " + id);
       return el;
     }
 
@@ -399,6 +391,34 @@
       }
     }
 
+    // ✅ crée path/circle si manquants (donc Médias ne peut plus "disparaître")
+    function ensureSvgFor(id){
+      const svg = must("lines");
+
+      let p = document.getElementById(`p-${id}`);
+      if(!p){
+        p = document.createElementNS("http://www.w3.org/2000/svg","path");
+        p.setAttribute("id", `p-${id}`);
+        p.setAttribute("stroke", "url(#g)");
+        p.setAttribute("stroke-width", id === "medias" ? "5.6" : "4.6"); // Médias un poil + visible
+        p.setAttribute("fill", "none");
+        p.setAttribute("filter", "url(#glow)");
+        p.setAttribute("stroke-linecap", "round");
+        svg.appendChild(p);
+      }
+
+      let c = document.getElementById(`c-${id}`);
+      if(!c){
+        c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        c.setAttribute("id", `c-${id}`);
+        c.setAttribute("r", "3.8");
+        c.setAttribute("fill", "rgba(255,255,255,.85)");
+        c.setAttribute("opacity", ".50");
+        svg.appendChild(c);
+      }
+      return {p,c};
+    }
+
     function layoutLines(){
       const map = must('map');
       const svg = must('lines');
@@ -408,23 +428,22 @@
       svg.setAttribute('width', root.width);
       svg.setAttribute('height', root.height);
 
-      const centerNode = must('node-center');
-      const cRect = rectRel(centerNode, root);
+      const cRect = rectRel(must('node-center'), root);
 
       const targets = [
         { id:'recherche', node: must('node-recherche') },
         { id:'besoin',   node: must('node-besoin') },
         { id:'onshape',  node: must('node-onshape') },
         { id:'planning', node: must('node-planning') },
-        { id:'medias',   node: must('node-medias') },
+        { id:'medias',   node: must('node-medias') }, // ✅ bien "medias"
       ];
 
       for(const t of targets){
         const tRect = rectRel(t.node, root);
-        let start, end;
 
-        // ✅ Trait Médias forcé (bas centre -> haut centre)
+        let start, end;
         if (t.id === 'medias') {
+          // ✅ forçage : bas-centre de la carte centrale -> haut-centre de la carte Médias
           start = { x: cRect.cx, y: cRect.bottom + PAD };
           end   = { x: tRect.cx, y: tRect.top - PAD };
         } else {
@@ -432,21 +451,27 @@
           end   = edgePoint(tRect, cRect.cx, cRect.cy);
         }
 
-        must(`p-${t.id}`).setAttribute('d', bezierPath(start, end));
-        const dot = must(`c-${t.id}`);
-        dot.setAttribute('cx', end.x);
-        dot.setAttribute('cy', end.y);
+        const {p,c} = ensureSvgFor(t.id);
+        p.setAttribute('d', bezierPath(start, end));
+        c.setAttribute('cx', end.x);
+        c.setAttribute('cy', end.y);
       }
     }
 
-    window.addEventListener('load', () => {
-      layoutLines();
-      setTimeout(layoutLines, 200);
-    });
-    window.addEventListener('resize', () => {
-      layoutLines();
-      setTimeout(layoutLines, 120);
-    });
+    function stabilize(){
+      // ✅ plusieurs frames: évite le cas "calcul trop tôt"
+      let n = 0;
+      const tick = () => {
+        try { layoutLines(); } catch(e){ console.error(e); }
+        if(n++ < 20) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      setTimeout(()=>{ try{layoutLines();}catch(e){console.error(e);} }, 200);
+      setTimeout(()=>{ try{layoutLines();}catch(e){console.error(e);} }, 600);
+    }
+
+    window.addEventListener('load', stabilize);
+    window.addEventListener('resize', stabilize);
   </script>
 </body>
 </html>
